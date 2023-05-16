@@ -33,7 +33,7 @@ namespace Portfolio_API.Repository
 
             if(users != null)
             {
-                var project = users.UserProjects.FirstOrDefault(p => p.Id == projectId);
+                var project = users.UserProjects[projectId];
                 if(project != null)
                 {
                     users.UserProjects.Remove(project);

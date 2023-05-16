@@ -90,7 +90,7 @@ namespace Portfolio_API.Controllers
         }
 
 
-        [HttpDelete]
+        [HttpDelete("{experienceId}")]
         public IActionResult DeleteUserExperience(int experienceId)
         {
             var userId = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);

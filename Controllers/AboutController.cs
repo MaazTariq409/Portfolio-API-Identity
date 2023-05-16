@@ -98,8 +98,8 @@ namespace Portfolio_API.Controllers
         }
 
         // DELETE api/<AboutController>/5
-        [HttpDelete("{id}")]
-        public ActionResult Delete()
+        [HttpDelete("{aboutId}")]
+        public ActionResult Delete(int aboutId)
         {
             var id = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
 
@@ -109,7 +109,7 @@ namespace Portfolio_API.Controllers
 			}
             else
             {
-				_userRepository.removeAbout(id);
+				_userRepository.removeAbout(id, aboutId);
 				_responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "About Details successfully");
 
 			}
