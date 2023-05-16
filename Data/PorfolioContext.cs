@@ -1,12 +1,14 @@
 ﻿
 
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Portfolio_API.Models;
 
 namespace Portfolio_API.Data
 {
-    public class PorfolioContext : DbContext
-    {
+    public class PorfolioContext : IdentityDbContext<IdentityUser<int>, IdentityRole<int>, int>
+	{
         public PorfolioContext(DbContextOptions<PorfolioContext> options) : base(options) 
         { 
         }
@@ -22,18 +24,7 @@ namespace Portfolio_API.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
-            //modelBuilder.Entity<Users>()
-            //    .HasOne(x => x.experience)
-            //    .WithOne(x => x.users);
-
-            //modelBuilder.Entity<Users>()
-            //    .HasOne(x => x.projects)
-            //    .WithOne(x => x.users);
-
-            //modelBuilder.Entity<Users>()
-            //    .HasOne(x => x.skills)
-            //    .WithOne(x => x.users);
-        }
-    }
+			base.OnModelCreating(modelBuilder);
+		}
+	}
 }
