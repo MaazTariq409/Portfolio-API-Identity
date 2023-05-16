@@ -89,8 +89,7 @@ namespace Portfolio_API.Controllers
 
         }
 
-
-        [HttpDelete]
+        [HttpDelete("{skillId}")]
         public IActionResult DeleteUserSkill(int skillId)
         {
             var userId = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);

@@ -48,10 +48,10 @@ namespace Portfolio_API.Repository
 
 		public void removeSkillsByUserID(int id, int skillId)
 		{
-			var users = _context.user.Include(x => x.Skills).FirstOrDefault(x => x.Id == skillId);
+			var users = _context.user.Include(x => x.Skills).FirstOrDefault(x => x.Id == id);
 			if (users != null)
 			{
-                var skill = users.Skills.FirstOrDefault(x => x.Id == skillId);
+                var skill = users.Skills[skillId];
                 if (skill != null)
                 {
                     _context.Remove(skill);

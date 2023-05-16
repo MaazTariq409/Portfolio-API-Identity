@@ -9,7 +9,7 @@ namespace Portfolio_API.Repository.Repository_Interface
 
         public bool AddAbout (int id, About about);
 
-        public void removeAbout (int id);
+        public void removeAbout (int id, int aboutId);
 
         public void updateAbout (int id, AboutDto about);
 

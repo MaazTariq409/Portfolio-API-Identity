@@ -53,10 +53,10 @@ namespace Portfolio_API.Repository
 
 		public void RemoveUserExperience(int id, int userexperienceid)
 		{
-			var users = _context.user.Include(x => x.UserExperiences).FirstOrDefault(x => x.Id == userexperienceid);
+			var users = _context.user.Include(x => x.UserExperiences).FirstOrDefault(x => x.Id == id);
 			if (users != null)
 			{
-                var experience = users.UserExperiences.FirstOrDefault(x => x.Id == userexperienceid);
+				var experience = users.UserExperiences[userexperienceid];
                 if (experience != null)
                 {
                     _context.Remove(experience);

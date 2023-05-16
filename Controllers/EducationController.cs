@@ -15,10 +15,10 @@ namespace Portfolio_API.Controllers
     {
         private readonly IEducation _EducationRepository;
         private readonly IMapper _mapper;
-		private ResponseObject _responseObject;
+        private ResponseObject _responseObject;
 
 
-		public EducationController (IEducation education, IMapper mapper)
+        public EducationController(IEducation education, IMapper mapper)
         {
             _EducationRepository = education;
             _mapper = mapper;
@@ -63,7 +63,7 @@ namespace Portfolio_API.Controllers
 
         //// PUT api/<EducationController>/5
         [HttpPut]
-        public ActionResult UpdateEdu( int eduId, EducationDto Edu)
+        public ActionResult UpdateEdu(int eduId, EducationDto Edu)
         {
             var id = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
 
@@ -81,7 +81,7 @@ namespace Portfolio_API.Controllers
         }
 
         // DELETE api/<EducationController>/5
-        [HttpDelete]
+        [HttpDelete("{eduId}")]
         public ActionResult DeleteEdu (int eduId)
         {
             var id = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
