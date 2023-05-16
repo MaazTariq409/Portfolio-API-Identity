@@ -35,7 +35,7 @@ namespace Portfolio_API.Repository
 			var user = _context.user.Include(x => x.Skills).FirstOrDefault(x => x.Id == id);
 			if (user != null)
 			{
-                var _Findskill = user.Skills.FirstOrDefault(x => x.Id == skillId);
+                var _Findskill = user.Skills[skillId];
 
 				if (_Findskill != null)
 				{

@@ -74,7 +74,7 @@ namespace Portfolio_API.Controllers
         public ActionResult UpdateUserSkill(int skillId, [FromBody] SkillsDto userSkill)
         {
             var userId = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
-            if (userId == 0 || skillId == 0)
+            if (userId == 0 )
             {
                 _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
                 return NotFound(_responseObject);
@@ -94,7 +94,7 @@ namespace Portfolio_API.Controllers
         {
             var userId = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
 
-            if (userId == 0 || skillId == 0)
+            if (userId == 0 )
             {
                 _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
                 return NotFound(_responseObject);

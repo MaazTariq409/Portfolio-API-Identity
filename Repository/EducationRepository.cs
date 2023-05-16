@@ -57,7 +57,7 @@ namespace Portfolio_API.Repository
 
             if (user != null)
             {
-                var edu = user.Education.FirstOrDefault(x => x.Id == eduId);
+                var edu = user.Education[eduId];
                 if (edu != null)
                 {
                     edu.degreeName = Edu.degreeName;
@@ -65,6 +65,7 @@ namespace Portfolio_API.Repository
                     edu.passingYear = Edu.passingYear;
                     edu.institute = Edu.institute;
                     edu.achievement = Edu.achievement;
+                    edu.grade = Edu.grade;
                 }
                 _context.SaveChanges();
             }
