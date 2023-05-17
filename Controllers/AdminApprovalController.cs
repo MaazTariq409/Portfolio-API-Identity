@@ -78,7 +78,7 @@ namespace Portfolio_API.Controllers
 
             var skillToUpdate = _mapper.Map<Skills>(edu);
 
-            _skill.removeSkillsRequest(userId, skillId, skillToUpdate);
+            _skill.updateSkillsByUserID(userId, skillId, skillToUpdate);
 
             _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull");
 
