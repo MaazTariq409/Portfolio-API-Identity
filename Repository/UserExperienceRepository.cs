@@ -37,7 +37,7 @@ namespace Portfolio_API.Repository
 			var user = _context.user.Include(x => x.UserExperiences).FirstOrDefault(x => x.Id == id);
 			if (user != null)
 			{
-				var _Findexperience = user.UserExperiences.FirstOrDefault(x => x.Id == userExperienceid);
+				var _Findexperience = user.UserExperiences[userExperienceid];
 
 				if (_Findexperience != null)
 				{
