@@ -41,8 +41,9 @@ namespace Portfolio_API.Repository
 				{
 					_Findskill.SkillName = skill.SkillName;
 					_Findskill.SkillLevel = skill.SkillLevel;
-				}
-				_context.SaveChanges();
+					_Findskill.status = skill.status;
+                    _context.SaveChanges();
+                }
 			}
 		}
 

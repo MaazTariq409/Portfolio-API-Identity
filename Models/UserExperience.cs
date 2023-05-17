@@ -14,6 +14,7 @@ namespace Portfolio_API.Models
         public string jobTitle { get; set; }
         public string responsibility { get; set; }
         public string duration { get; set; }
+        public string status { get; set; } = "pending";
 
         [ForeignKey("userID")]
         [ValidateNever]

@@ -16,6 +16,8 @@ namespace Portfolio_API.Models
         public string Stack { get; set; }
         [Required]
         public string GitUrl { get; set; }
+        public string status { get; set; } = "pending";
+
         [ForeignKey("UserID")]
         [ValidateNever]
         public User user { get; set; }

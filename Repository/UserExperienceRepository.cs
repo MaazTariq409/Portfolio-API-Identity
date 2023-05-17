@@ -45,6 +45,7 @@ namespace Portfolio_API.Repository
 					_Findexperience.responsibility = userExperience.responsibility;
 					_Findexperience.companyName = userExperience.companyName;
                     _Findexperience.duration = userExperience.duration;
+					_Findexperience.status = userExperience.status;
 
                 }
 				_context.SaveChanges();

@@ -66,8 +66,12 @@ namespace Portfolio_API.Repository
                     edu.institute = Edu.institute;
                     edu.achievement = Edu.achievement;
                     edu.grade = Edu.grade;
+
+                    edu.status= Edu.status;
+                    _context.SaveChanges();
+
                 }
-                _context.SaveChanges();
+                
             }
         }
     }

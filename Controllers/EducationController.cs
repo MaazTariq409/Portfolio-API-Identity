@@ -36,7 +36,10 @@ namespace Portfolio_API.Controllers
             }
 
             var educationDetails = _EducationRepository.GetDetails(userId);
-            var finalEduDetail = _mapper.Map<IEnumerable<EducationDto>>(educationDetails);
+
+            var ApprovedEduDetails = educationDetails.Where(x => x.status != "pending").ToList();
+
+            var finalEduDetail = _mapper.Map<IEnumerable<EducationDto>>(ApprovedEduDetails);
             _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull", finalEduDetail);
 
             return Ok(_responseObject);
