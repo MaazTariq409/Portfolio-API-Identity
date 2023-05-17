@@ -39,7 +39,9 @@ namespace Portfolio_API.Controllers
 
             var experienceFromDB = _userExperienceRepository.GetUserExperience(userId);
 
-            var experienceDto = _mapper.Map<IEnumerable<UserExperienceDto>>(experienceFromDB);
+            var approvedExp = experienceFromDB.Where(x => x.status != "pending").ToList();
+
+            var experienceDto = _mapper.Map<IEnumerable<UserExperienceDto>>(approvedExp);
 
             _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull", experienceDto);
 
