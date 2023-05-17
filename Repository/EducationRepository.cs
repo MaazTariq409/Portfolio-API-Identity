@@ -51,6 +51,20 @@ namespace Portfolio_API.Repository
             }
         }
 
+        public void removeEducationRequest(int userId, int eduId)
+        {
+            var users = _context.user.Include(x => x.Education).FirstOrDefault(x => x.Id == userId);
+            if (users != null)
+            {
+                var education = users.Education.FirstOrDefault(x => x.Id == eduId);
+                if (education != null)
+                {
+                    _context.Remove(education);
+                    _context.SaveChanges();
+                }
+            }
+        }
+
         public void updateEducation(int id, int eduId, Education Edu)
         {
             var user = _context.user.Include(x => x.Education).FirstOrDefault(x => x.Id == id);
@@ -72,6 +86,30 @@ namespace Portfolio_API.Repository
 
                 }
                 
+            }
+        }
+
+        public void updateEducationRequest(int id, int eduId, Education Edu)
+        {
+            var user = _context.user.Include(x => x.Education).FirstOrDefault(x => x.Id == id);
+
+            if (user != null)
+            {
+                var edu = user.Education.FirstOrDefault(x => x.Id == eduId);
+                if (edu != null)
+                {
+                    edu.degreeName = Edu.degreeName;
+                    edu.degreeLevel = Edu.degreeLevel;
+                    edu.passingYear = Edu.passingYear;
+                    edu.institute = Edu.institute;
+                    edu.achievement = Edu.achievement;
+                    edu.grade = Edu.grade;
+
+                    edu.status = Edu.status;
+                    _context.SaveChanges();
+
+                }
+
             }
         }
     }

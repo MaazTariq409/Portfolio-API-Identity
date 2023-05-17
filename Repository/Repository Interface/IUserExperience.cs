@@ -11,6 +11,10 @@ namespace Portfolio_API.Repository.Repository_Interface
 
         public void RemoveUserExperience(int userid, int removeUserExperienceId);
 
+        public void RemoveUserExperienceRequest(int id, int userexperienceid);
+
         public void UpdateUserExperience(int id, int removeUserExperienceId, UserExperience userExperience);
+
+        public void UpdateUserExperienceRequest(int id, int userExperienceid, UserExperience userExperience);
     }
 }

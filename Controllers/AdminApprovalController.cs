@@ -40,7 +40,7 @@ namespace Portfolio_API.Controllers
 
             var eduToUpdate = _mapper.Map<Education>(edu);
 
-            _education.updateEducation(userId, eduId, eduToUpdate);
+            _education.updateEducationRequest(userId, eduId, eduToUpdate);
 
             _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull");
 
@@ -57,7 +57,7 @@ namespace Portfolio_API.Controllers
                 return NotFound(_responseObject);
             }
 
-            _education.removeEducation(userId, eduId);
+            _education.removeEducationRequest(userId, eduId);
 
             _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull");
 
@@ -94,7 +94,7 @@ namespace Portfolio_API.Controllers
                 return NotFound(_responseObject);
             }
 
-            _skill.removeSkillsByUserID(userId, skillId);
+            _skill.removeSkillsRequest(userId, skillId);
 
             _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull");
 
@@ -114,7 +114,7 @@ namespace Portfolio_API.Controllers
 
             var ExperienceToUpdate = _mapper.Map<UserExperience>(exp);
 
-            _experience.UpdateUserExperience(userId, expId, ExperienceToUpdate);
+            _experience.UpdateUserExperienceRequest(userId, expId, ExperienceToUpdate);
 
             _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull");
 
@@ -130,7 +130,7 @@ namespace Portfolio_API.Controllers
                 return NotFound(_responseObject);
             }
 
-            _experience.RemoveUserExperience(userId, expId);
+            _experience.RemoveUserExperienceRequest(userId, expId);
 
             _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull");
 
