@@ -12,6 +12,8 @@ namespace Portfolio_API.Models
         public string SkillName { get; set; }
         [Required]
         public string SkillLevel { get; set; }
+        public string status { get; set; } = "pending";
+
         [ForeignKey("UserID")]
         [ValidateNever]
         public User user { get; set; }
