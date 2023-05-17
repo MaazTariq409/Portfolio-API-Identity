@@ -18,6 +18,9 @@ namespace Portfolio_API.Data
         public DbSet<Education> educations { get; set; }
         public DbSet<UserProjects> userProjects { get; set; }
         public DbSet<UserExperience> userExperiences { get; set; }
+        public DbSet<UserCity> userCity { get; set; }
+        public DbSet<UserCountry> userCountry { get; set; }
+        public DbSet<UserInstitute> userInstitute { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
