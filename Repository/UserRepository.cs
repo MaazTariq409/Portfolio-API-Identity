@@ -24,6 +24,17 @@ namespace Portfolio_API.Repository
             return users;
         }
 
+        public IEnumerable<User> Users(int id)
+        {
+            var users = _context.user
+                .Include(edu => edu.Education)
+                .Include(exp => exp.UserExperiences)
+                .Include(skill => skill.Skills)
+                .Where(x => x.Id== id)
+                .ToList();
+            return users;
+        }
+
         public User GetById(int id)
         {
             return _context.user.FirstOrDefault(x => x.Id == id);

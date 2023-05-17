@@ -38,6 +38,14 @@ namespace Portfolio_API.Controllers
             return Ok(users);
         }
 
+        [HttpGet("/api/users/pending")]
+        public ActionResult<IEnumerable<User>> GetAllData()
+        {
+            var userId = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
+            var users = _userRepository.Users(userId);
+            return Ok(users);
+        }
+
         // GET api/<UserController>/5
         [HttpGet]
         public ActionResult<User> GetUserDetials ()
