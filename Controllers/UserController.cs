@@ -30,13 +30,13 @@ namespace Portfolio_API.Controllers
             _token = token;
         }
 
-        //// GET: api/<UserController>
-        //[HttpGet]
-        //public ActionResult<IEnumerable<User>> GetAllUsers ()
-        //{
-        //    var users = _userRepository.Users();
-        //    return Ok(users);
-        //}
+        // GET: api/<UserController>
+        [HttpGet("/api/users")]
+        public ActionResult<IEnumerable<User>> GetAllUsers()
+        {
+            var users = _userRepository.Users();
+            return Ok(users);
+        }
 
         // GET api/<UserController>/5
         [HttpGet]

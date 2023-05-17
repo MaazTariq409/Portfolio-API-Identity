@@ -65,8 +65,10 @@ namespace Portfolio_API.Repository
                     edu.passingYear = Edu.passingYear;
                     edu.institute = Edu.institute;
                     edu.achievement = Edu.achievement;
+                    edu.status= Edu.status;
+                    _context.SaveChanges();
                 }
-                _context.SaveChanges();
+                
             }
         }
     }

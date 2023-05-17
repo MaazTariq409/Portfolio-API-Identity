@@ -5,6 +5,7 @@ using Portfolio_API.Data;
 using Portfolio_API.Repository;
 using Portfolio_API.Repository.Repository_Interface;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace Portfolio_API
 {
@@ -28,12 +29,16 @@ namespace Portfolio_API
 
             builder.Services.AddScoped<IUserExperience, UserExperienceRepository>();
 
-
             builder.Services.AddTransient<TokenGeneration>();
 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers()
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+            });
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
