@@ -5,6 +5,7 @@ namespace Portfolio_API.Repository.Repository_Interface
     public interface IUser
     {
         public IEnumerable<User> Users();
+        public IEnumerable<User> Users(int id);
 
         public User GetUserById(int id, bool includeProperty);
 
