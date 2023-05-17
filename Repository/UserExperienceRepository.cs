@@ -52,7 +52,27 @@ namespace Portfolio_API.Repository
 			}
 		}
 
-		public void RemoveUserExperience(int id, int userexperienceid)
+        public void UpdateUserExperienceRequest(int id, int userExperienceid, UserExperience userExperience)
+        {
+            var user = _context.user.Include(x => x.UserExperiences).FirstOrDefault(x => x.Id == id);
+            if (user != null)
+            {
+                var _Findexperience = user.UserExperiences.FirstOrDefault(x => x.Id == userExperienceid);
+
+                if (_Findexperience != null)
+                {
+                    _Findexperience.jobTitle = userExperience.jobTitle;
+                    _Findexperience.responsibility = userExperience.responsibility;
+                    _Findexperience.companyName = userExperience.companyName;
+                    _Findexperience.duration = userExperience.duration;
+                    _Findexperience.status = userExperience.status;
+
+                }
+                _context.SaveChanges();
+            }
+        }
+
+        public void RemoveUserExperience(int id, int userexperienceid)
 		{
 			var users = _context.user.Include(x => x.UserExperiences).FirstOrDefault(x => x.Id == id);
 			if (users != null)
@@ -65,5 +85,19 @@ namespace Portfolio_API.Repository
                 }
             }
 		}
-	}
+
+        public void RemoveUserExperienceRequest(int id, int userexperienceid)
+        {
+            var users = _context.user.Include(x => x.UserExperiences).FirstOrDefault(x => x.Id == id);
+            if (users != null)
+            {
+                var experience = users.UserExperiences.FirstOrDefault(x => x.Id == userexperienceid);
+                if (experience != null)
+                {
+                    _context.Remove(experience);
+                    _context.SaveChanges();
+                }
+            }
+        }
+    }
 }

@@ -11,6 +11,10 @@ namespace Portfolio_API.Repository.Repository_Interface
 
         public void removeEducation (int id, int eduId);
 
+        public void removeEducationRequest(int userId, int eduId);
+
         public void updateEducation (int id, int eduId, Education about);
+
+        public void updateEducationRequest(int id, int eduId, Education about);
     }
 }

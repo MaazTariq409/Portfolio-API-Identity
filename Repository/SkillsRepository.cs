@@ -47,7 +47,24 @@ namespace Portfolio_API.Repository
 			}
 		}
 
-		public void removeSkillsByUserID(int id, int skillId)
+        public void updateSkillsRequest(int id, int skillId, Skills skill)
+        {
+            var user = _context.user.Include(x => x.Skills).FirstOrDefault(x => x.Id == id);
+            if (user != null)
+            {
+                var _Findskill = user.Skills.FirstOrDefault(x => x.Id == skillId);
+
+                if (_Findskill != null)
+                {
+                    _Findskill.SkillName = skill.SkillName;
+                    _Findskill.SkillLevel = skill.SkillLevel;
+                    _Findskill.status = skill.status;
+                    _context.SaveChanges();
+                }
+            }
+        }
+
+        public void removeSkillsByUserID(int id, int skillId)
 		{
 			var users = _context.user.Include(x => x.Skills).FirstOrDefault(x => x.Id == id);
 			if (users != null)
@@ -60,5 +77,19 @@ namespace Portfolio_API.Repository
                 }
             }
 		}
-	}
+
+        public void removeSkillsRequest(int id, int skillId)
+        {
+            var users = _context.user.Include(x => x.Skills).FirstOrDefault(x => x.Id == id);
+            if (users != null)
+            {
+                var skill = users.Skills.FirstOrDefault(x => x.Id == skillId);
+                if (skill != null)
+                {
+                    _context.Remove(skill);
+                    _context.SaveChanges();
+                }
+            }
+        }
+    }
 }
