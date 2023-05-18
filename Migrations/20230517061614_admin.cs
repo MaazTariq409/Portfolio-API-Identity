@@ -4,7 +4,7 @@
 
 namespace Portfolio_API.Migrations
 {
-    public partial class final : Migration
+    public partial class admin : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -79,6 +79,7 @@ namespace Portfolio_API.Migrations
                     grade = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     passingYear = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     achievement = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -100,6 +101,7 @@ namespace Portfolio_API.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     SkillName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SkillLevel = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -123,6 +125,7 @@ namespace Portfolio_API.Migrations
                     jobTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     responsibility = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     duration = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     userID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -146,6 +149,7 @@ namespace Portfolio_API.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Stack = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     GitUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>

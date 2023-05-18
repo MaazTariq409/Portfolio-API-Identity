@@ -22,6 +22,10 @@ namespace Portfolio_API.MapperProfiles
 
             CreateMap<AdminGetSkillDto, Skills>();
             CreateMap<Skills, AdminGetSkillDto>();
+
+            CreateMap<UserBlogs , AdminBlogsDto>();
+            CreateMap<AdminBlogsDto , UserBlogs>();
+
         }
     }
 }
