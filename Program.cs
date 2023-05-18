@@ -38,7 +38,7 @@ namespace Portfolio_API
 
             builder.Services.AddControllers();
 			// Add Identity
-			builder.Services.AddIdentity<IdentityManual, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+			builder.Services.AddIdentity<IdentityManual, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
 				.AddEntityFrameworkStores<PorfolioContext>()
 				.AddDefaultTokenProviders();
 			//builder.Services.AddDefaultIdentity<IdentityUser<int>>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -87,7 +87,7 @@ namespace Portfolio_API
 
             app.UseAuthentication();
 
-            app.UseAuthorization();
+			app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

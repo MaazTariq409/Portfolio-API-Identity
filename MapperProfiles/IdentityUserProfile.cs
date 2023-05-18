@@ -9,7 +9,7 @@ namespace Portfolio_API.MapperProfiles
 	{
 		public IdentityUserProfile()
 		{
-			CreateMap<IdentityUser, IdentityUserDto>();
+			CreateMap<IdentityManual, IdentityUserDto>();
 			CreateMap<IdentityUserDto, IdentityManual>();
 		}
 	}

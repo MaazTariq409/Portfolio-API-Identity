@@ -2,9 +2,13 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Portfolio_API.DTOs;
 using Portfolio_API.Models;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Security.Principal;
+using System.Text;
 
 namespace Portfolio_API.Controllers
 {
@@ -17,12 +21,15 @@ namespace Portfolio_API.Controllers
 
 		private readonly UserManager<IdentityManual> _userManager;
 		private readonly SignInManager<IdentityManual> _signInManager;
+		private readonly IConfiguration _configuration;
+
 		//private readonly RoleManager<IdentityManual> _roleManager;
 
 		public AccountController(
 			UserManager<IdentityManual> userManager,
 			SignInManager<IdentityManual> signInManager,
 			//RoleManager<IdentityManual> roleManager,
+			IConfiguration configuration,
 			IMapper mapper)
 		{
 			_userManager = userManager;
@@ -62,24 +69,38 @@ namespace Portfolio_API.Controllers
 		}
 
 		[HttpPost("login")]
-		public async Task<IActionResult> Login(IdentityManual model)
+		public async Task<IActionResult> Login(IdentityUserDto model)
 		{
-			if (model == null)
+			var user = await _userManager.FindByNameAsync(model.Email);
+			if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
 			{
-				return NotFound(model);
+				var userRoles = await _userManager.GetRolesAsync(user);
+
+				return Ok();
 			}
-			else
-			{
-				var result = await _signInManager.PasswordSignInAsync(model.NormalizedEmail, model.PasswordHash, false, false);
-				if (result.Succeeded)
-				{
-					return Ok();
-				}
-				else
-				{
-					return NotFound();
-				}
-			}
+			return NotFound();
+
+			//if (model == null)
+			//{
+			//	return NotFound(model);
+			//}
+			//else
+			//{
+			//	var idenityuser = new IdentityManual();
+			//	idenityuser.Email = model.Email;
+			//	idenityuser.PasswordHash = model.Password;
+
+			//	var result = await _signInManager.PasswordSignInAsync(idenityuser.Email, idenityuser.PasswordHash, false, lockoutOnFailure: false);
+
+			//	if (result.Succeeded)
+			//	{
+			//		return Ok();
+			//	}
+			//	else
+			//	{
+			//		return NotFound();
+			//	}
+			//}
 		}
 
 
