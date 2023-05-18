@@ -30,6 +30,8 @@ namespace Portfolio_API
             builder.Services.AddScoped<IInstitute, InstituteRepository>();
             builder.Services.AddScoped<ICity, CityRepository>();
             builder.Services.AddTransient<ICountry, CountryRepository>();
+            builder.Services.AddTransient<IUserBlogs, UserBlogRepository>();
+
 
             builder.Services.AddTransient<TokenGeneration>();
 

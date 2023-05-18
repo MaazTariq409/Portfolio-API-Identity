@@ -26,5 +26,8 @@ namespace Portfolio_API.Models
         public List<UserProjects> UserProjects { get; set; }
         public List<UserExperience> UserExperiences { get; set; }
 
+        public List<UserBlogs> userBlogs { get; set; }
+
+
     }
 }

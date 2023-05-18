@@ -14,6 +14,9 @@ namespace Portfolio_API.MapperProfiles
             CreateMap<adminSkillDto, Skills>();
             CreateMap<UserExperience, AdminExperienceDto>();
             CreateMap<AdminExperienceDto, UserExperience>();
+            CreateMap<UserBlogs , AdminBlogsDto>();
+            CreateMap<AdminBlogsDto , UserBlogs>();
+
         }
     }
 }
