@@ -106,14 +106,14 @@ namespace Portfolio_API.Repository
                 var blog = user.userBlogs.FirstOrDefault(x => x.Id == blogId);
                 if (blog != null)
                 {
-                    //blog.title = userBlogs.title;
-                    //blog.status = userBlogs.status;
-                    //blog.dateCreated = userBlogs.dateCreated;
-                    //blog.imageUrl = userBlogs.imageUrl;
-                    //blog.content = userBlogs.content;
-                    //blog.tags = userBlogs.tags;
+                    blog.title = userBlogs.title;
+                    blog.status = userBlogs.status;
+                    blog.dateCreated = userBlogs.dateCreated;
+                    blog.imageUrl = userBlogs.imageUrl;
+                    blog.content = userBlogs.content;
+                    blog.tags = userBlogs.tags;
+                    blog.status = userBlogs.status;
 
-                    blog = userBlogs;
                     _context.SaveChanges();
 
                 }

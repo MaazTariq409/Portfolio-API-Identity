@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Portfolio_API.DTOs;
 using Portfolio_API.DTOs.Admin;
 using Portfolio_API.Models;
 
@@ -25,6 +26,11 @@ namespace Portfolio_API.MapperProfiles
 
             CreateMap<UserBlogs , AdminBlogsDto>();
             CreateMap<AdminBlogsDto , UserBlogs>();
+
+            CreateMap<AdminBlogGetDto, UserBlogs>();
+            CreateMap<UserBlogs, AdminBlogsDto>();
+            CreateMap<UserBlogs, AdminBlogPostDto>();
+            CreateMap<AdminBlogPostDto, UserBlogs>();
 
         }
     }
