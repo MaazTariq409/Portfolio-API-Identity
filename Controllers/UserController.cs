@@ -88,12 +88,12 @@ namespace Portfolio_API.Controllers
 
             _userRepository.addUser(finalUser);
 
-            var Token = _token.TokenGenerator(finalUser);
+            //var Token = _token.TokenGenerator(finalUser);
 
-            var tokenToReturn = new Tokenmodel();
-            tokenToReturn.Token = Token;
+            //var tokenToReturn = new Tokenmodel();
+            //tokenToReturn.Token = Token;
 
-            _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "User Added Successfully", tokenToReturn);
+            _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "User Added Successfully");
 
             return Ok(_responseObject);
         }

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Portfolio_API.DTOs;
 using Portfolio_API.Models;
+using Portfolio_API.Utility;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Principal;
@@ -22,85 +23,72 @@ namespace Portfolio_API.Controllers
 		private readonly UserManager<IdentityManual> _userManager;
 		private readonly SignInManager<IdentityManual> _signInManager;
 		private readonly IConfiguration _configuration;
+		private readonly TokenGeneration _token;
 
-		//private readonly RoleManager<IdentityManual> _roleManager;
+
+		private readonly RoleManager<IdentityManual> _roleManager;
 
 		public AccountController(
 			UserManager<IdentityManual> userManager,
 			SignInManager<IdentityManual> signInManager,
-			//RoleManager<IdentityManual> roleManager,
+			RoleManager<IdentityManual> roleManager,
 			IConfiguration configuration,
-			IMapper mapper)
+			IMapper mapper,
+			TokenGeneration token
+			)
 		{
 			_userManager = userManager;
 			_signInManager = signInManager;
-			//_roleManager = roleManager;
+			_roleManager = roleManager;
 			_mapper = mapper;
+			_token = token;
 
 		}
 		[HttpPost("register")]
-		public async Task<IActionResult> Register(IdentityManual model)
+		public async Task<IActionResult> Register(IdentityUserDto model)
 		{
-			if (model == null)
-			{
-				return NotFound();
-			}
-			else
-			{
-				var identityUser = new IdentityManual()
-				{
-					Email = model.NormalizedEmail,
-					UserName= model.NormalizedUserName,
-				};
-				// var user = new IdentityUserDto { UserName = model.UserName, Email = model.Email };
-				//var AboutDto = _mapper.Map<IdentityUserDto>(user);
+			//if (!_roleManager.RoleExistsAsync(UserRoles.Role_Admin).GetAwaiter().GetResult())
+			//{
+			//	_roleManager.CreateAsync(new IdentityRoles(UserRoles.Role_Admin)).GetAwaiter().GetResult();
+			//	_roleManager.CreateAsync(new IdentityRoles(UserRoles.Role_User_Indi)).GetAwaiter().GetResult();
 
-				var result = await _userManager.CreateAsync(identityUser, model.PasswordHash);
-				
-				if (result.Succeeded)
-				{
-					return Ok();
-				}
-				else
-				{
-					return BadRequest(result.Errors);
-				}
-			}
+			//}
+
+			var userExists = await _userManager.FindByNameAsync(model.UserName);
+		
+			if (userExists != null)
+				return StatusCode(StatusCodes.Status500InternalServerError);
+
+			var identityUser = new IdentityManual()
+			{
+				UserName = model.UserName,
+				PasswordHash = model.Password
+			};
+			var result = await _userManager.CreateAsync(identityUser, model.Password);
+			if (!result.Succeeded)
+				return StatusCode(StatusCodes.Status500InternalServerError);
+
+			return Ok();
 		}
 
 		[HttpPost("login")]
 		public async Task<IActionResult> Login(IdentityUserDto model)
 		{
-			var user = await _userManager.FindByNameAsync(model.Email);
+			var user = await _userManager.FindByNameAsync(model.UserName);
+
 			if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
 			{
 				var userRoles = await _userManager.GetRolesAsync(user);
 
-				return Ok();
+				var Token = _token.TokenGenerator(user);
+
+				var tokenToReturn = new Tokenmodel();
+				tokenToReturn.Token = Token;
+
+				return Ok(tokenToReturn);
 			}
 			return NotFound();
 
-			//if (model == null)
-			//{
-			//	return NotFound(model);
-			//}
-			//else
-			//{
-			//	var idenityuser = new IdentityManual();
-			//	idenityuser.Email = model.Email;
-			//	idenityuser.PasswordHash = model.Password;
-
-			//	var result = await _signInManager.PasswordSignInAsync(idenityuser.Email, idenityuser.PasswordHash, false, lockoutOnFailure: false);
-
-			//	if (result.Succeeded)
-			//	{
-			//		return Ok();
-			//	}
-			//	else
-			//	{
-			//		return NotFound();
-			//	}
-			//}
 		}
 
 

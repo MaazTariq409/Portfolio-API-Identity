@@ -1,5 +1,7 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 using Portfolio_API.Data;
+using Portfolio_API.Migrations;
 using Portfolio_API.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -11,13 +13,19 @@ namespace Portfolio_API.Controllers
     {
         private readonly PorfolioContext _context;
         private readonly IConfiguration _configuration;
+		private readonly UserManager<IdentityManual> _userManager;
 
-        public TokenGeneration(PorfolioContext context, IConfiguration configuration)
+
+		public TokenGeneration(PorfolioContext context,
+            UserManager<IdentityManual> userManager,
+            IConfiguration configuration)
         {
             _context = context;
             _configuration = configuration;
-        }
-        public string TokenGenerator(User user)
+			_userManager = userManager;
+
+		}
+		public string TokenGenerator(IdentityManual user)
         {
 
             var securityKey = new SymmetricSecurityKey(
@@ -26,9 +34,9 @@ namespace Portfolio_API.Controllers
             var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var TokenClaims = new List<Claim>();
-            TokenClaims.Add(new Claim("UserId", user.Id.ToString()));
-            TokenClaims.Add(new Claim("UserName", user.username.ToString()));
-            TokenClaims.Add(new Claim("Email", user.email.ToString()));
+            //TokenClaims.Add(new Claim("UserId", user.Id.ToString()));
+            TokenClaims.Add(new Claim("UserName", user.UserName.ToString()));
+            //TokenClaims.Add(new Claim("Email", user.Email.ToString()));
 
             var jwtSecurityToken = new JwtSecurityToken(
                 _configuration["Authentication:Issuer"],
@@ -44,12 +52,14 @@ namespace Portfolio_API.Controllers
             return tokenToReturn;
         }
 
-        public User validateUserInput(string email, string password)
+        public IdentityManual validateUserInput(string email, string password)
         {
-            var validUser = _context.user.FirstOrDefault(x => x.email == email);
-            if (validUser != null)
+			var validUser = _context.identityManuals.FirstOrDefault(x => x.Email == email);
+
+			//var validUser = _context.user.FirstOrDefault(x => x.email == email);
+			if (validUser != null)
             {
-                if (validUser.password == password)
+                if (validUser.PasswordHash == password)
                 {
                     return validUser;
                 }
