@@ -22,6 +22,10 @@ namespace Portfolio_API.Data
         public DbSet<UserCountry> userCountry { get; set; }
         public DbSet<UserInstitute> userInstitute { get; set; }
 
+        public DbSet<UserBlogs> userBlogs { get; set; }
+
+
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
