@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Portfolio_API.Controllers;
 using Portfolio_API.Data;
+using Portfolio_API.Models;
 using Portfolio_API.Repository;
 using Portfolio_API.Repository.Repository_Interface;
 using System.Text;
@@ -35,9 +37,17 @@ namespace Portfolio_API
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             builder.Services.AddControllers();
+			// Add Identity
+			builder.Services.AddIdentity<IdentityManual, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+				.AddEntityFrameworkStores<PorfolioContext>()
+				.AddDefaultTokenProviders();
+			//builder.Services.AddDefaultIdentity<IdentityUser<int>>(options => options.SignIn.RequireConfirmedAccount = true)
+	        //.AddEntityFrameworkStores<PorfolioContext>();
 
-			builder.Services.AddDefaultIdentity<IdentityUser<int>>(options => options.SignIn.RequireConfirmedAccount = true)
-	        .AddEntityFrameworkStores<PorfolioContext>();
+			// Configure the scope for IdentityUser
+			builder.Services.AddScoped<IdentityUser>();
+			builder.Services.AddScoped<IdentityRole>();
+
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();

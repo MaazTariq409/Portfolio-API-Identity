@@ -7,14 +7,18 @@ using Portfolio_API.Models;
 
 namespace Portfolio_API.Data
 {
-    public class PorfolioContext : IdentityDbContext<IdentityUser<int>, IdentityRole<int>, int>
+    public class PorfolioContext : IdentityDbContext<IdentityManual>
 	{
         public PorfolioContext(DbContextOptions<PorfolioContext> options) : base(options) 
         { 
         }
 
+        
         public DbSet<User> user { get; set; }
-        public DbSet<About> about { get; set; }
+
+		public DbSet<IdentityManual> identityManuals { get; set; }
+
+		public DbSet<About> about { get; set; }
         public DbSet<Resume> resume { get; set; }
         public DbSet<Skills> skills { get; set; }
         public DbSet<Education> educations { get; set; }
