@@ -17,9 +17,7 @@ namespace Portfolio_API.Repository
         public IEnumerable<User> Users()
         {
             var users = _context.user
-                .Include(edu => edu.Education)
-                .Include(exp => exp.UserExperiences)
-                .Include(skill => skill.Skills)
+                .Include(about => about.About)
                 .ToList();
             return users;
         }

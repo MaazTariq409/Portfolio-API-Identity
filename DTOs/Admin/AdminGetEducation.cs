@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Portfolio_API.DTOs
+namespace Portfolio_API.DTOs.Admin
 {
-    public class AdminEducationDto
+    public class AdminGetEducation
     {
+        public int Id { get; set; }
         [Required]
         public string institute { get; set; }
         [Required(ErrorMessage = "Please enter a Degree Level")]

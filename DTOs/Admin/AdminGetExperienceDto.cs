@@ -1,9 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Portfolio_API.DTOs
+namespace Portfolio_API.DTOs.Admin
 {
-    public class AdminExperienceDto
+    public class AdminGetExperienceDto
     {
+        public int Id { get; set; }
+        [Required]
         public string companyName { get; set; }
         [Required]
         public string jobTitle { get; set; }
