@@ -16,9 +16,9 @@ namespace Portfolio_API.Models
         public string Stack { get; set; }
         [Required]
         public string GitUrl { get; set; }
-        [ForeignKey("UserID")]
-        [ValidateNever]
-        public User user { get; set; }
-        public int UserID { get; set; }
-    }
+		[ForeignKey("ProfileID")]
+		[ValidateNever]
+		public UserProfile user { get; set; }
+		public int ProfileID { get; set; }
+	}
 }

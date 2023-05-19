@@ -20,13 +20,13 @@ namespace Portfolio_API.Repository
             //var user = _context.user.Include(x => x.Education).FirstOrDefault(user => user.Id == id);
             //var EducationDetails = user.Education.ToList();
 
-            var education = _context.educations.Where(x => x.UserID == id).ToList();
+            var education = _context.educations.Where(x => x.ProfileID == id).ToList();
             return education;
         }
 
         public void AddEducation(int id, IEnumerable<Education> Edu)
         {
-            var user = _context.user.Include(x => x.Education).FirstOrDefault(x => x.Id == id );
+            var user = _context.userProfiles.Include(x => x.Education).FirstOrDefault(x => x.Id == id );
             if (user != null)
             {
                 foreach (var item in Edu)
@@ -39,7 +39,7 @@ namespace Portfolio_API.Repository
 
         public void removeEducation(int userId, int eduId)
         {
-            var users = _context.user.Include(x => x.Education).FirstOrDefault(x => x.Id == userId);
+            var users = _context.userProfiles.Include(x => x.Education).FirstOrDefault(x => x.Id == userId);
             if (users != null)
             {
                 var education = users.Education[eduId];
@@ -53,7 +53,7 @@ namespace Portfolio_API.Repository
 
         public void updateEducation(int id, int eduId, Education Edu)
         {
-            var user = _context.user.Include(x => x.Education).FirstOrDefault(x => x.Id == id);
+            var user = _context.userProfiles.Include(x => x.Education).FirstOrDefault(x => x.Id == id);
 
             if (user != null)
             {

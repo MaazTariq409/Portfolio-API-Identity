@@ -14,11 +14,11 @@ namespace Portfolio_API.Repository
         }
         public IEnumerable<UserProjects> GetProjectsByUserID(int id)
         {
-            return _context.userProjects.Where(p => p.UserID == id).ToList();
+            return _context.userProjects.Where(p => p.ProfileID == id).ToList();
         }
         public void AddProjectsByUserID(int id, IEnumerable<UserProjects> projects)
         {
-            var users = _context.user.Include(x => x.UserProjects).FirstOrDefault(p => p.Id == id);
+            var users = _context.userProfiles.Include(x => x.UserProjects).FirstOrDefault(p => p.Id == id);
 
             foreach (var project in projects)
             {
@@ -29,7 +29,7 @@ namespace Portfolio_API.Repository
 
         public void removeProjectsByUserID(int id, int projectId)
         {
-            var users = _context.user.Include(x => x.UserProjects).FirstOrDefault(p => p.Id == id);
+            var users = _context.userProfiles.Include(x => x.UserProjects).FirstOrDefault(p => p.Id == id);
 
             if(users != null)
             {
@@ -44,7 +44,7 @@ namespace Portfolio_API.Repository
 
         public void updateProjectsByUserID(int id, int projectId, UserProjects projects)
         {
-            var users = _context.user.Include(x => x.UserProjects).FirstOrDefault(p => p.Id == id);
+            var users = _context.userProfiles.Include(x => x.UserProjects).FirstOrDefault(p => p.Id == id);
 
             if(users != null)
             {

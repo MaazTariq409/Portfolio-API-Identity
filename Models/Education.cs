@@ -20,9 +20,9 @@ namespace Portfolio_API.Models
         [Required]
         public string passingYear { get; set; }
         public string achievement { get; set; }
-        [ForeignKey("UserID")]
-        [ValidateNever]
-        public User user { get; set; }
-        public int UserID { get; set; }
-    }
+		[ForeignKey("ProfileID")]
+		[ValidateNever]
+		public UserProfile user { get; set; }
+		public int ProfileID { get; set; }
+	}
 }

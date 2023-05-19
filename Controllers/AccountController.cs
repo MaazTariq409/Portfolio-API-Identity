@@ -1,15 +1,10 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using Portfolio_API.DTOs;
 using Portfolio_API.Models;
 using Portfolio_API.Utility;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Security.Principal;
-using System.Text;
+
 
 namespace Portfolio_API.Controllers
 {
@@ -26,12 +21,12 @@ namespace Portfolio_API.Controllers
 		private readonly TokenGeneration _token;
 
 
-		private readonly RoleManager<IdentityManual> _roleManager;
+		//private readonly RoleManager<IdentityRoles> _roleManager;
 
 		public AccountController(
 			UserManager<IdentityManual> userManager,
 			SignInManager<IdentityManual> signInManager,
-			RoleManager<IdentityManual> roleManager,
+			//RoleManager<IdentityRoles> roleManager,
 			IConfiguration configuration,
 			IMapper mapper,
 			TokenGeneration token
@@ -39,7 +34,7 @@ namespace Portfolio_API.Controllers
 		{
 			_userManager = userManager;
 			_signInManager = signInManager;
-			_roleManager = roleManager;
+			//_roleManager = roleManager;
 			_mapper = mapper;
 			_token = token;
 
@@ -62,6 +57,7 @@ namespace Portfolio_API.Controllers
 			var identityUser = new IdentityManual()
 			{
 				UserName = model.UserName,
+				Email = model.Email,
 				PasswordHash = model.Password
 			};
 			var result = await _userManager.CreateAsync(identityUser, model.Password);

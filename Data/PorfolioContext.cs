@@ -14,11 +14,12 @@ namespace Portfolio_API.Data
         }
 
         
-        public DbSet<User> user { get; set; }
+       // public DbSet<User> user { get; set; }
 
 		public DbSet<IdentityManual> identityManuals { get; set; }
+		public DbSet<UserProfile> userProfiles { get; set; }
 
-		public DbSet<About> about { get; set; }
+		//public DbSet<About> about { get; set; }
         public DbSet<Resume> resume { get; set; }
         public DbSet<Skills> skills { get; set; }
         public DbSet<Education> educations { get; set; }

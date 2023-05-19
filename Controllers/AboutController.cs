@@ -59,7 +59,7 @@ namespace Portfolio_API.Controllers
 			}
             else
             {
-				var finalAbout = _mapper.Map<About>(about);
+				var finalAbout = _mapper.Map<UserProfile>(about);
 
 				var aboutAdded = _userRepository.AddAbout(id, finalAbout);
 

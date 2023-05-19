@@ -5,9 +5,9 @@ namespace Portfolio_API.Repository.Repository_Interface
 {
     public interface IAbout
     {
-        public About GetAbout (int id);
+        public UserProfile GetAbout (int id);
 
-        public bool AddAbout (int id, About about);
+        public bool AddAbout (int id, UserProfile about);
 
         public void removeAbout (int id, int aboutId);
 

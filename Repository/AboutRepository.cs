@@ -15,48 +15,64 @@ namespace Portfolio_API.Repository
             _context = context;
         }
 
-        public bool AddAbout(int id, About about)
+        public bool AddAbout(int id, UserProfile about)
         {
-            var user = _context.user.Include(x => x.About).FirstOrDefault(x => x.Id == id);
-            if (user.About == null)
-            {
-                user.About = about;
-                _context.SaveChanges();
+			var users = _context.userProfiles.FirstOrDefault(x => x.Id == id);
+		
+            if (users != null)
+			{
+				new UserProfile()
+				{
+					ProfileUrl = about.ProfileUrl,
+					Introduction = about.Introduction,
+					Description = about.Description,
+					Name = about.Name,
+					Dob = about.Dob,
+					Email = about.Email,
+					Linkedin = about.Linkedin,
+					Github = about.Github,
+					PhoneNo = about.PhoneNo,
+					Address = about.Address,
+					Language = about.Language,
+					Gender = about.Gender
+				};
+
+				_context.SaveChanges();
             }
             return false;
         }
 
         public bool checkAbout(int id)
         {
-            var user = _context.user.Include(x =>x.About).FirstOrDefault(x => x.Id == id);
-            if (user.About == null)
+			var User = _context.userProfiles.FirstOrDefault(x => x.Id == id);
+
+            if (User == null)
             {
                 return false;
             }
             return true;
         }
 
-        public About GetAbout(int id)
+        public UserProfile GetAbout(int id)
         {
-            var UserAbout = _context.about.FirstOrDefault(x => x.UserID == id);
+			var UserAbout = _context.userProfiles.FirstOrDefault(x => x.Id == id);
+
             return UserAbout;
         }
 
         public void removeAbout(int id, int aboutId)
         {
-            var users = _context.user.Include(x => x.About).FirstOrDefault(x => x.Id == id);
+            var users = _context.userProfiles.FirstOrDefault(x => x.Id == id);
             if (users != null)
             {
-                _context.Remove(users.About);
+                _context.Remove(users);
                 _context.SaveChanges();
             }
         }
 
         public void updateAbout(int id, AboutDto about)
         {
-            //var UserAbout = _context.about.Where(x => x.Id == id).Include(x => x.address).ToList();
-
-            var UserAbout = _context.about.FirstOrDefault(x => x.UserID == id);
+			var UserAbout = _context.userProfiles.FirstOrDefault(x => x.Id == id);
 
             if (UserAbout != null)
             {

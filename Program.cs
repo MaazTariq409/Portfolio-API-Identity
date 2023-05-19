@@ -23,7 +23,7 @@ namespace Portfolio_API
                 builder.Configuration.GetConnectionString("DefaultConnection")
                 ));
 
-            builder.Services.AddScoped<IUser, UserRepository>();
+            //builder.Services.AddScoped<IUser, UserRepository>();
             builder.Services.AddScoped<IAbout, AboutRepository>();
             builder.Services.AddScoped<ISkills, SkillsRepository>();
             builder.Services.AddScoped<IEducation, EducationRepository>();

@@ -9,7 +9,7 @@ namespace Portfolio_API.MapperProfiles
 	{
 		public SkillsProfile()
 		{
-			CreateMap<UserDto, User>();
+			CreateMap<UserDto, UserProfile>();
 			CreateMap<SkillsDto, Skills>();
 			CreateMap<Skills, SkillsDto>();
 		}

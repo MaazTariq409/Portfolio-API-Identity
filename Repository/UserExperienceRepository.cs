@@ -19,12 +19,12 @@ namespace Portfolio_API.Repository
 
 		public IEnumerable<UserExperience> GetUserExperience(int userid)
 		{
-			return _context.userExperiences.Where(x => x.userID == userid).ToList();
+			return _context.userExperiences.Where(x => x.ProfileID == userid).ToList();
 		}
 
 		public void AddUserExperience (int userid, IEnumerable<UserExperience> userExperiences)
 		{
-			var users = _context.user.Include(x => x.UserExperiences).FirstOrDefault(x => x.Id == userid);
+			var users = _context.userProfiles.Include(x => x.UserExperiences).FirstOrDefault(x => x.Id == userid);
 			foreach (var experience in userExperiences)
 			{
                 users.UserExperiences.Add(experience);
@@ -34,7 +34,7 @@ namespace Portfolio_API.Repository
 
 		public void UpdateUserExperience(int id, int userExperienceid, UserExperience userExperience)
 		{
-			var user = _context.user.Include(x => x.UserExperiences).FirstOrDefault(x => x.Id == id);
+			var user = _context.userProfiles.Include(x => x.UserExperiences).FirstOrDefault(x => x.Id == id);
 			if (user != null)
 			{
 				var _Findexperience = user.UserExperiences.FirstOrDefault(x => x.Id == userExperienceid);
@@ -53,7 +53,7 @@ namespace Portfolio_API.Repository
 
 		public void RemoveUserExperience(int id, int userexperienceid)
 		{
-			var users = _context.user.Include(x => x.UserExperiences).FirstOrDefault(x => x.Id == id);
+			var users = _context.userProfiles.Include(x => x.UserExperiences).FirstOrDefault(x => x.Id == id);
 			if (users != null)
 			{
 				var experience = users.UserExperiences[userexperienceid];
