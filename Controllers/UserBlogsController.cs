@@ -25,6 +25,7 @@ namespace Portfolio_API.Controllers
 
 
         //Get
+        [AllowAnonymous]
         [HttpGet("/api/userblogs")]
 
         public ActionResult<List<UserBlogsDto>> GetAllBlogs()
