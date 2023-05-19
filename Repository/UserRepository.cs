@@ -28,6 +28,7 @@ namespace Portfolio_API.Repository
                 .Include(edu => edu.Education)
                 .Include(exp => exp.UserExperiences)
                 .Include(skill => skill.Skills)
+                .Include(artical => artical.userBlogs)
                 .Where(x => x.Id== id)
                 .ToList();
             return users;
