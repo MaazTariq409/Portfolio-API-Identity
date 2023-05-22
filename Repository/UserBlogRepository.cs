@@ -112,7 +112,7 @@ namespace Portfolio_API.Repository
                     blog.imageUrl = userBlogs.imageUrl;
                     blog.content = userBlogs.content;
                     blog.tags = userBlogs.tags;
-                    blog.status = "pending";
+                    blog.status = userBlogs.status;
 
                     _context.SaveChanges();
 
