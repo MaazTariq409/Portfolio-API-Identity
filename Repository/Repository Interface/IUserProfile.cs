@@ -5,14 +5,14 @@ namespace Portfolio_API.Repository.Repository_Interface
 {
     public interface IUserProfile
     {
-        public UserProfile GetAbout (int id);
+        public UserProfile GetAbout (string id);
 
         public bool AddAbout (string id, UserProfile about);
 
-        public void removeAbout (int id, int aboutId);
+        public void removeAbout (string id, int aboutId);
 
-        public void updateAbout (int id, UserProfileDto about);
+        public void updateAbout (string id, UserProfileDto about);
 
-        public bool checkAbout (int id);
+        public bool checkAbout (string id);
     }
 }

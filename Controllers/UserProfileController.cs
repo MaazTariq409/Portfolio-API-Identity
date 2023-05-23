@@ -29,7 +29,7 @@ namespace Portfolio_API.Controllers
         [HttpGet("/getabout")]
         public ActionResult<IEnumerable<UserProfileDto>> aboutDetails()
         {
-            var id = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
+            var id = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
 
             if (!_userProfileRepository.checkAbout(id))
             {
@@ -82,8 +82,8 @@ namespace Portfolio_API.Controllers
         [HttpPut]
         public ActionResult Put(UserProfileDto about)
         {
-            var id = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
-            if (id == 0)
+            var id = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
+            if (id == null)
             {
 				_responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
 			}
@@ -101,9 +101,9 @@ namespace Portfolio_API.Controllers
         [HttpDelete("{aboutId}")]
         public ActionResult Delete(int aboutId)
         {
-            var id = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
+            var id = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
 
-            if (id == 0)
+            if (id == null)
             {
 				_responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
 			}

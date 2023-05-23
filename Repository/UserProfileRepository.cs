@@ -31,34 +31,11 @@ namespace Portfolio_API.Repository
                 return false;
         }
 
-            //if (identityUser != null)
-            //{
-            //    userProfile.Name = userProfileDetails.Name;
-            //    userProfile.Email = userProfileDetails.Email;
-            //    userProfile.PhoneNo = userProfileDetails.PhoneNo;
-            //    userProfile.Dob = userProfileDetails.Dob;
-            //    userProfile.Description = userProfileDetails.Description;
-            //    userProfile.ProfileUrl = userProfileDetails.ProfileUrl;
-            //    userProfile.Github = userProfileDetails.Github;
-            //    userProfile.Linkedin = userProfileDetails.Linkedin;
-            //    userProfile.Gender = userProfileDetails.Gender;
-            //    userProfile.Address = userProfileDetails.Address;
-            //    userProfile.Introduction = userProfileDetails.Introduction;
-            //    userProfile.Language = userProfileDetails.Language;
 
-            //    _context.SaveChanges();
 
-            //    return true;
-            //}else
-            //return false;
-        //}
-
-        public bool checkAbout(int id)
+        public bool checkAbout(string id)
         {
-			var users = _context.identityManuals.FirstOrDefault(x => x.Id == "id");
-
-			// var User = _context.userProfiles.FirstOrDefault(x => x.Id == id);
-
+			var users = _context.identityManuals.FirstOrDefault(x => x.Id == id);
             if (users == null)
             {
                 return false;
@@ -66,17 +43,17 @@ namespace Portfolio_API.Repository
             return true;
         }
 
-        public UserProfile GetAbout(int id)
+        public UserProfile GetAbout(string id)
         {
 
-			var UserAbout = _context.userProfiles.FirstOrDefault(x => x.Id == id);
+			var UserAbout = _context.userProfiles.FirstOrDefault(x => x.UserID == id);
 
             return UserAbout;
         }
 
-        public void removeAbout(int id, int aboutId)
+        public void removeAbout(string id, int aboutId)
         {
-            var users = _context.userProfiles.FirstOrDefault(x => x.Id == id);
+            var users = _context.identityManuals.FirstOrDefault(x => x.Id == id);
             if (users != null)
             {
                 _context.Remove(users);
@@ -84,24 +61,24 @@ namespace Portfolio_API.Repository
             }
         }
 
-        public void updateAbout(int id, UserProfileDto about)
+        public void updateAbout(string id, UserProfileDto about)
         {
-			var UserAbout = _context.userProfiles.FirstOrDefault(x => x.Id == id);
+			var UserAbout = _context.identityManuals.FirstOrDefault(x => x.Id == id);
 
             if (UserAbout != null)
             {
-                UserAbout.Name = about.Name;
-                UserAbout.Email = about.Email;
-                UserAbout.PhoneNo = about.PhoneNo;
-                UserAbout.Dob = about.Dob;
-                UserAbout.Description = about.Description;
-                UserAbout.ProfileUrl = about.ProfileUrl;
-                UserAbout.Github = about.Github;
-                UserAbout.Linkedin = about.Linkedin;
-                UserAbout.Gender = about.Gender;
-                UserAbout.Address = about.Address;
-                UserAbout.Introduction = about.Introduction;
-                UserAbout.Language = about.Language;
+                UserAbout.UserProfile.Name = about.Name;
+                UserAbout.UserProfile.Email = about.Email;
+                UserAbout.UserProfile.PhoneNo = about.PhoneNo;
+                UserAbout.UserProfile.Dob = about.Dob;
+                UserAbout.UserProfile.Description = about.Description;
+                UserAbout.UserProfile.ProfileUrl = about.ProfileUrl;
+                UserAbout.UserProfile.Github = about.Github;
+                UserAbout.UserProfile.Linkedin = about.Linkedin;
+                UserAbout.UserProfile.Gender = about.Gender;
+                UserAbout.UserProfile.Address = about.Address;
+                UserAbout.UserProfile.Introduction = about.Introduction;
+                UserAbout.UserProfile.Language = about.Language;
 
                 _context.SaveChanges();
             }
