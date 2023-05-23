@@ -50,7 +50,7 @@ namespace Portfolio_API.Controllers
         [HttpPost]
         public ActionResult AddAboutDetails (UserProfileDto about)
         {
-            var id = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "Id")?.Value);
+            var id = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
 
             if (id == 0)
             {
