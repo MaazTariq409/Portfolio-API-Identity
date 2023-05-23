@@ -5,16 +5,16 @@ namespace Portfolio_API.Repository.Repository_Interface
 {
     public interface IUserExperience
     {
-        public IEnumerable<UserExperience> GetUserExperience(int userid);
+        public IEnumerable<UserExperience> GetUserExperience(string userid);
 
-        public void AddUserExperience(int userid, IEnumerable<UserExperience> userExperiences);
+        public void AddUserExperience(string userid, IEnumerable<UserExperience> userExperiences);
 
-        public void RemoveUserExperience(int userid, int removeUserExperienceId);
+        public void RemoveUserExperience(string userid, int removeUserExperienceId);
 
-        public void RemoveUserExperienceRequest(int id, int userexperienceid);
+        public void RemoveUserExperienceRequest(string id, int userexperienceid);
 
-        public void UpdateUserExperience(int id, int removeUserExperienceId, UserExperience userExperience);
+        public void UpdateUserExperience(string id, int removeUserExperienceId, UserExperience userExperience);
 
-        public void UpdateUserExperienceRequest(int id, int userExperienceid, UserExperience userExperience);
+        public void UpdateUserExperienceRequest(string id, int userExperienceid, UserExperience userExperience);
     }
 }

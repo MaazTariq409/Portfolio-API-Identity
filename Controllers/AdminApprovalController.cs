@@ -150,7 +150,7 @@ namespace Portfolio_API.Controllers
 
 
         [HttpGet("getexperience")]
-        public ActionResult<List<AdminGetExperienceDto>> GetUserExperiences(int userId)
+        public ActionResult<List<AdminGetExperienceDto>> GetUserExperiences(string userId)
         {
             if (userId == null)
             {
@@ -170,7 +170,7 @@ namespace Portfolio_API.Controllers
         }
 
         [HttpPut("experience/{expId}")]
-        public IActionResult updateExperience(int userId, int expId, AdminPostExperienceDto exp)
+        public IActionResult updateExperience(string userId, int expId, AdminPostExperienceDto exp)
         {
             if (exp == null)
             {
@@ -188,7 +188,7 @@ namespace Portfolio_API.Controllers
         }
 
         [HttpDelete("experience/{expId}")]
-        public IActionResult DeleteExperience(int userId, int expId)
+        public IActionResult DeleteExperience(string userId, int expId)
         {
             if (expId == 0)
             {
