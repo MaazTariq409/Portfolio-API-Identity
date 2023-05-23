@@ -15,43 +15,45 @@ namespace Portfolio_API.Repository
             _context = context;
         }
 
-        public IEnumerable<UserBlogs> GetByUserId(int id)
+        public IEnumerable<UserBlogs> GetByUserId(string id)
         {
-            var allBlogs = _context.userBlogs.Where(x => x.userId == id).Include(x => x.user.About).ToList();
+            var user = _context.identityManuals.FirstOrDefault(x => x.Id == id);
+
+            var allBlogs = _context.userBlogs.Where(x => x.UserProfileID == user.UserProfile.Id).Include(x => x.UserProfile).ToList();
             return allBlogs;
         }
 
         public IEnumerable<UserBlogs> GetAll()
         {
-            var allBlogs = _context.userBlogs.Include(x => x.user.About).ToList();
+            var allBlogs = _context.userBlogs.Include(x => x.UserProfile).ToList();
             return allBlogs;
         }
 
-        public IEnumerable<About> GetAbout()
+        public IEnumerable<UserProfile> GetAbout()
         {
-            var About = _context.about.ToList();
+            var About = _context.userProfiles.ToList();
             return About;
         }
 
-        public void AddBlogs(int id, IEnumerable<UserBlogs> userBlogs)
+        public void AddBlogs(string id, IEnumerable<UserBlogs> userBlogs)
         {
-            var user = _context.user.Include(x => x.userBlogs).FirstOrDefault(x => x.Id == id);
+            var user = _context.identityManuals.FirstOrDefault(x => x.Id == id);
             if (user != null)
             {
                 foreach (var item in userBlogs)
                 {
-                    user.userBlogs.Add(item);
+                    user.UserProfile.UserBlogs.Add(item);
                 }
                 _context.SaveChanges();
             }
         }
 
-        public void removeBlogs(int id, int blogId)
+        public void removeBlogs(string id, int blogId)
         {
-            var users = _context.user.Include(x => x.userBlogs).FirstOrDefault(x => x.Id == id);
+            var users = _context.identityManuals.FirstOrDefault(x => x.Id == id);
             if (users != null)
             {
-                var blogs = users.userBlogs[blogId];
+                var blogs = users.UserProfile.UserBlogs[blogId];
                 if (blogs != null)
                 {
                     _context.Remove(blogs);
@@ -60,12 +62,12 @@ namespace Portfolio_API.Repository
             }
         }
 
-        public void removeBlogsRequest(int userId, int blogId)
+        public void removeBlogsRequest(string userId, int blogId)
         {
-            var users = _context.user.Include(x => x.userBlogs).FirstOrDefault(x => x.Id == userId);
+            var users = _context.identityManuals.FirstOrDefault(x => x.Id == userId);
             if (users != null)
             {
-                var blog = users.userBlogs.FirstOrDefault(x => x.Id == blogId);
+                var blog = users.UserProfile.UserBlogs.FirstOrDefault(x => x.Id == blogId);
                 if (blog != null)
                 {
                     _context.Remove(blog);
@@ -74,13 +76,13 @@ namespace Portfolio_API.Repository
             }
         }
 
-        public void updateblogs(int id, int blogsId, UserBlogs userBlogs)
+        public void updateblogs(string id, int blogsId, UserBlogs userBlogs)
         {
-            var user = _context.user.Include(x => x.userBlogs).FirstOrDefault(x => x.Id == id);
+            var user = _context.identityManuals.FirstOrDefault(x => x.Id == id);
 
             if (user != null)
             {
-                var blog = user.userBlogs[blogsId];
+                var blog = user.UserProfile.UserBlogs[blogsId];
                 if (blog != null)
                 {
                     blog.title = userBlogs.title;
@@ -97,13 +99,13 @@ namespace Portfolio_API.Repository
             }
         }
 
-        public void updateBlogsRequest(int id, int blogId, UserBlogs userBlogs)
+        public void updateBlogsRequest(string id, int blogId, UserBlogs userBlogs)
         {
-            var user = _context.user.Include(x => x.userBlogs).FirstOrDefault(x => x.Id == id);
+            var user = _context.identityManuals.FirstOrDefault(x => x.Id == id);
 
             if (user != null)
             {
-                var blog = user.userBlogs.FirstOrDefault(x => x.Id == blogId);
+                var blog = user.UserProfile.UserBlogs.FirstOrDefault(x => x.Id == blogId);
                 if (blog != null)
                 {
                     blog.title = userBlogs.title;

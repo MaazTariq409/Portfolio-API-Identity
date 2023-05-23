@@ -92,9 +92,9 @@ namespace Portfolio_API.Controllers
         // Skill Approval Endpoints
 
         [HttpGet("getskills")]
-        public ActionResult<List<AdminGetSkillDto>> GetUserSkills(int userId)
+        public ActionResult<List<AdminGetSkillDto>> GetUserSkills(string userId)
         {
-            if (userId == 0)
+            if (userId == null)
             {
                 _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
                 return NotFound(_responseObject);
@@ -209,9 +209,9 @@ namespace Portfolio_API.Controllers
         //Artical Approval Endpoints
 
         [HttpGet("getarticals")]
-        public ActionResult<List<AdminGetExperienceDto>> GetUserArticals(int userId)
+        public ActionResult<List<AdminGetExperienceDto>> GetUserArticals(string userId)
         {
-            if (userId == 0)
+            if (userId == null)
             {
                 _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "No Experience found associated with current user");
                 return NotFound(_responseObject);
@@ -228,7 +228,7 @@ namespace Portfolio_API.Controllers
         }
 
         [HttpPut("artical/{articalId}")]
-        public IActionResult updateArtical(int userId, int articalId, AdminBlogPostDto blogs)
+        public IActionResult updateArtical(string userId, int articalId, AdminBlogPostDto blogs)
         {
             if (blogs == null)
             {
@@ -246,7 +246,7 @@ namespace Portfolio_API.Controllers
         }
 
         [HttpDelete("artical/{articalId}")]
-        public IActionResult DeleteArtical(int userId, int articalId)
+        public IActionResult DeleteArtical(string userId, int articalId)
         {
             if (articalId == 0)
             {

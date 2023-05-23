@@ -18,10 +18,10 @@ namespace Portfolio_API.Models
 
 
 
-        [ForeignKey("userId")]
+        [ForeignKey("UserProfileID")]
         [ValidateNever]
-        public User user { get; set; }
-        public int userId { get; set; }
+        public UserProfile UserProfile { get; set; }
+        public int UserProfileID { get; set; }
 
 
     }

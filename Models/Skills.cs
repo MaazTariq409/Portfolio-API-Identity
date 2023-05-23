@@ -13,6 +13,8 @@ namespace Portfolio_API.Models
         [Required]
         public string SkillLevel { get; set; }
 
+        public string status { get; set; } = "pending";
+
         [ForeignKey("ProfileID")]
         [ValidateNever]
         public UserProfile user { get; set; }

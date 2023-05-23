@@ -54,7 +54,7 @@ namespace Portfolio_API.Repository
 
         public void UpdateUserExperienceRequest(int id, int userExperienceid, UserExperience userExperience)
         {
-            var user = _context.user.Include(x => x.UserExperiences).FirstOrDefault(x => x.Id == id);
+            var user = _context.userProfiles.Include(x => x.UserExperiences).FirstOrDefault(x => x.Id == id);
             if (user != null)
             {
                 var _Findexperience = user.UserExperiences.FirstOrDefault(x => x.Id == userExperienceid);
@@ -88,7 +88,7 @@ namespace Portfolio_API.Repository
 
         public void RemoveUserExperienceRequest(int id, int userexperienceid)
         {
-            var users = _context.user.Include(x => x.UserExperiences).FirstOrDefault(x => x.Id == id);
+            var users = _context.userProfiles.Include(x => x.UserExperiences).FirstOrDefault(x => x.Id == id);
             if (users != null)
             {
                 var experience = users.UserExperiences.FirstOrDefault(x => x.Id == userexperienceid);

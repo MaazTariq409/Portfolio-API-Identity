@@ -46,5 +46,6 @@ namespace Portfolio_API.Models
 		[ValidateNever]
 		public List<UserProjects> UserProjects { get; set; }
 		public List<UserExperience> UserExperiences { get; set; }
+		public List<UserBlogs> UserBlogs { get; set; }
 	}
 }

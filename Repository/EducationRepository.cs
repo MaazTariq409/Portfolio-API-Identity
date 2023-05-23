@@ -53,7 +53,7 @@ namespace Portfolio_API.Repository
 
         public void removeEducationRequest(int userId, int eduId)
         {
-            var users = _context.user.Include(x => x.Education).FirstOrDefault(x => x.Id == userId);
+            var users = _context.userProfiles.Include(x => x.Education).FirstOrDefault(x => x.Id == userId);
             if (users != null)
             {
                 var education = users.Education.FirstOrDefault(x => x.Id == eduId);
@@ -91,7 +91,7 @@ namespace Portfolio_API.Repository
 
         public void updateEducationRequest(int id, int eduId, Education Edu)
         {
-            var user = _context.user.Include(x => x.Education).FirstOrDefault(x => x.Id == id);
+            var user = _context.userProfiles.Include(x => x.Education).FirstOrDefault(x => x.Id == id);
 
             if (user != null)
             {

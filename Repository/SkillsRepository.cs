@@ -3,6 +3,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Portfolio_API.Data;
 using Portfolio_API.DTOs;
+using Portfolio_API.DTOs.Admin;
 using Portfolio_API.Models;
 using Portfolio_API.Repository.Repository_Interface;
 
@@ -16,9 +17,11 @@ namespace Portfolio_API.Repository
 			_context = context;
 
 		}
-		public IEnumerable<Skills> GetSkillsByUserID(int id)
+		public IEnumerable<Skills> GetSkillsByUserID(string id)
 		{
-			return _context.skills.Where(x => x.ProfileID.Equals(id)).ToList();
+            var user = _context.identityManuals.Include(x => x.UserProfile.Skills).FirstOrDefault(x => x.Id == id);
+
+            return user.UserProfile.Skills;
 		}
 		public void AddSkillsByUserID(int id, IEnumerable<Skills> skills)
 		{
@@ -49,7 +52,7 @@ namespace Portfolio_API.Repository
 
         public void updateSkillsRequest(int id, int skillId, Skills skill)
         {
-            var user = _context.user.Include(x => x.Skills).FirstOrDefault(x => x.Id == id);
+            var user = _context.userProfiles.Include(x => x.Skills).FirstOrDefault(x => x.Id == id);
             if (user != null)
             {
                 var _Findskill = user.Skills.FirstOrDefault(x => x.Id == skillId);
@@ -80,7 +83,7 @@ namespace Portfolio_API.Repository
 
         public void removeSkillsRequest(int id, int skillId)
         {
-            var users = _context.user.Include(x => x.Skills).FirstOrDefault(x => x.Id == id);
+            var users = _context.userProfiles.Include(x => x.Skills).FirstOrDefault(x => x.Id == id);
             if (users != null)
             {
                 var skill = users.Skills.FirstOrDefault(x => x.Id == skillId);

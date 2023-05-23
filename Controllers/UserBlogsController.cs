@@ -51,11 +51,11 @@ namespace Portfolio_API.Controllers
                 userBlogsDto[i].tags = approvedBlogs[i].tags;
                 userBlogsDto[i].imageUrl = approvedBlogs[i].imageUrl;
 
-                userBlogsDto[i].ProfileUrl = approvedBlogs[i].user.About.ProfileUrl;
-                userBlogsDto[i].linkedin = approvedBlogs[i].user.About.Linkedin;
-                userBlogsDto[i].Github = approvedBlogs[i].user.About.Github;
-                userBlogsDto[i].Name = approvedBlogs[i].user.About.Name;
-                userBlogsDto[i].Email = approvedBlogs[i].user.About.Email;
+                userBlogsDto[i].ProfileUrl = approvedBlogs[i].UserProfile.ProfileUrl;
+                userBlogsDto[i].linkedin = approvedBlogs[i].UserProfile.Linkedin;
+                userBlogsDto[i].Github = approvedBlogs[i].UserProfile.Github;
+                userBlogsDto[i].Name = approvedBlogs[i].UserProfile.Name;
+                userBlogsDto[i].Email = approvedBlogs[i].UserProfile.Email;
             }
 
             _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull", userBlogsDto);
@@ -66,8 +66,8 @@ namespace Portfolio_API.Controllers
         [HttpGet]
         public ActionResult<List<UserBlogsDto>> GetUserBlogs()
         {
-            var userId = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
-            if (userId == 0)
+            var userId = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
+            if (userId == null)
             {
                 _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "User not found in database");
                 return NotFound(_responseObject);
@@ -93,11 +93,11 @@ namespace Portfolio_API.Controllers
                 userBlogsDto[i].tags = approvedBlogs[i].tags;
                 userBlogsDto[i].imageUrl = approvedBlogs[i].imageUrl;
 
-                userBlogsDto[i].ProfileUrl = approvedBlogs[i].user.About.ProfileUrl;
-                userBlogsDto[i].linkedin = approvedBlogs[i].user.About.Linkedin;
-                userBlogsDto[i].Github = approvedBlogs[i].user.About.Github;
-                userBlogsDto[i].Name = approvedBlogs[i].user.About.Name;
-                userBlogsDto[i].Email = approvedBlogs[i].user.About.Email;
+                userBlogsDto[i].ProfileUrl = approvedBlogs[i].UserProfile.ProfileUrl;
+                userBlogsDto[i].linkedin = approvedBlogs[i].UserProfile.Linkedin;
+                userBlogsDto[i].Github = approvedBlogs[i].UserProfile.Github;
+                userBlogsDto[i].Name = approvedBlogs[i].UserProfile.Name;
+                userBlogsDto[i].Email = approvedBlogs[i].UserProfile.Email;
             }
 
             _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull", userBlogsDto);
@@ -109,8 +109,8 @@ namespace Portfolio_API.Controllers
         [HttpPost]
         public ActionResult AddUserBlog([FromBody] IEnumerable<UserBlogDto> userBlogs)
         {
-            var userId = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
-            if (userId == 0)
+            var userId = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
+            if (userId == null)
             {
                 _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "User not found in database");
                 return NotFound(_responseObject);
@@ -129,8 +129,8 @@ namespace Portfolio_API.Controllers
         [HttpPut("{blogId}")]
         public ActionResult UpdateUserExperience(int blogId, [FromBody] UserBlogDto userBlogs)
         {
-            var userId = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
-            if (userId == 0)
+            var userId = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
+            if (userId == null)
             {
                 _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "User id not found");
                 return NotFound(_responseObject);
@@ -149,9 +149,9 @@ namespace Portfolio_API.Controllers
         [HttpDelete("{blogId}")]
         public IActionResult DeleteUserExperience(int blogId)
         {
-            var userId = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
+            var userId = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
 
-            if (userId == 0)
+            if (userId == null)
             {
                 _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "User not found");
                 return NotFound(_responseObject);

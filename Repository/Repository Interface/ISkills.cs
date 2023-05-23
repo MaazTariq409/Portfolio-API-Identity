@@ -5,7 +5,7 @@ namespace Portfolio_API.Repository.Repository_Interface
 {
 	public interface ISkills
 	{
-		public IEnumerable<Skills> GetSkillsByUserID(int id);
+		public IEnumerable<Skills> GetSkillsByUserID(string id);
 
 		public void AddSkillsByUserID(int id, IEnumerable<Skills> skills);
 

@@ -5,20 +5,20 @@ namespace Portfolio_API.Repository.Repository_Interface
 {
     public interface IUserBlogs
     {
-        public IEnumerable<UserBlogs> GetByUserId (int id);
+        public IEnumerable<UserBlogs> GetByUserId (string id);
         public IEnumerable<UserBlogs> GetAll();
-        public IEnumerable<About> GetAbout();
+        public IEnumerable<UserProfile> GetAbout();
 
 
 
-        public void AddBlogs (int id, IEnumerable<UserBlogs> userBlogs);
+        public void AddBlogs (string id, IEnumerable<UserBlogs> userBlogs);
 
-        public void removeBlogs (int id, int blogId);
+        public void removeBlogs (string id, int blogId);
 
-        public void removeBlogsRequest(int userId, int blogId);
+        public void removeBlogsRequest(string userId, int blogId);
 
-        public void updateblogs (int id, int blogsId, UserBlogs userBlogs);
+        public void updateblogs (string id, int blogsId, UserBlogs userBlogs);
 
-        public void updateBlogsRequest(int id, int blogId, UserBlogs userBlogs);
+        public void updateBlogsRequest(string id, int blogId, UserBlogs userBlogs);
     }
 }
