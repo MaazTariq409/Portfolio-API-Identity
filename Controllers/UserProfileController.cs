@@ -12,35 +12,35 @@ namespace Portfolio_API.Controllers
     [Route("api/aboutDetails")]
     [Authorize]
     [ApiController]
-    public class AboutController : ControllerBase
+    public class UserProfileController : ControllerBase
     {
-        private readonly IAbout _userRepository;
+        private readonly IUserProfile _userProfileRepository;
         private readonly IMapper _mapper;
 		private ResponseObject _responseObject;
 
 
-		public AboutController(IAbout UserRepository, IMapper mapper)
+		public UserProfileController(IUserProfile UserRepository, IMapper mapper)
         {
-            _userRepository = UserRepository;
+            _userProfileRepository = UserRepository;
             _mapper = mapper;
         }
 
         // GET: api/<AboutController>
-        [HttpGet]
-        public ActionResult<IEnumerable<AboutDto>> aboutDetails()
+        [HttpGet("/getabout")]
+        public ActionResult<IEnumerable<UserProfileDto>> aboutDetails()
         {
             var id = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
 
-            if (!_userRepository.checkAbout(id))
+            if (!_userProfileRepository.checkAbout(id))
             {
                 _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
                 return NotFound(_responseObject);
 			}
             else
             {
-				var aboutFromDB = _userRepository.GetAbout(id);
+				var aboutFromDB = _userProfileRepository.GetAbout(id);
 
-				var AboutDto = _mapper.Map<AboutDto>(aboutFromDB);
+				var AboutDto = _mapper.Map<UserProfileDto>(aboutFromDB);
 				_responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull", AboutDto);
 			}
 			return Ok(_responseObject);
@@ -48,9 +48,9 @@ namespace Portfolio_API.Controllers
 
         // POST api/<AboutController>
         [HttpPost]
-        public ActionResult AddAboutDetails (AboutDto about)
+        public ActionResult AddAboutDetails (UserProfileDto about)
         {
-            var id = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
+            var id = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "Id")?.Value);
 
             if (id == 0)
             {
@@ -61,7 +61,7 @@ namespace Portfolio_API.Controllers
             {
 				var finalAbout = _mapper.Map<UserProfile>(about);
 
-				var aboutAdded = _userRepository.AddAbout(id, finalAbout);
+				var aboutAdded = _userProfileRepository.AddAbout(id, finalAbout);
 
                 if(aboutAdded)
                 {
@@ -80,7 +80,7 @@ namespace Portfolio_API.Controllers
 
         // PUT api/<AboutController>/5
         [HttpPut]
-        public ActionResult Put(AboutDto about)
+        public ActionResult Put(UserProfileDto about)
         {
             var id = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
             if (id == 0)
@@ -89,7 +89,7 @@ namespace Portfolio_API.Controllers
 			}
             else
             {
-				_userRepository.updateAbout(id, about);
+				_userProfileRepository.updateAbout(id, about);
 				_responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "About Details updated successfully");
 			}
 			//var finalAbout = _mapper.Map<About>(about);
@@ -109,7 +109,7 @@ namespace Portfolio_API.Controllers
 			}
             else
             {
-				_userRepository.removeAbout(id, aboutId);
+				_userProfileRepository.removeAbout(id, aboutId);
 				_responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "About Details successfully");
 
 			}

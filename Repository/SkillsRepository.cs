@@ -3,7 +3,6 @@ using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Portfolio_API.Data;
 using Portfolio_API.DTOs;
-using Portfolio_API.Migrations;
 using Portfolio_API.Models;
 using Portfolio_API.Repository.Repository_Interface;
 

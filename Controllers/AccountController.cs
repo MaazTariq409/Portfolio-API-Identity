@@ -19,6 +19,7 @@ namespace Portfolio_API.Controllers
 		private readonly SignInManager<IdentityManual> _signInManager;
 		private readonly IConfiguration _configuration;
 		private readonly TokenGeneration _token;
+		private ResponseObject _responseObject;
 
 
 		//private readonly RoleManager<IdentityRoles> _roleManager;
@@ -42,49 +43,56 @@ namespace Portfolio_API.Controllers
 		[HttpPost("register")]
 		public async Task<IActionResult> Register(IdentityUserDto model)
 		{
-			//if (!_roleManager.RoleExistsAsync(UserRoles.Role_Admin).GetAwaiter().GetResult())
-			//{
-			//	_roleManager.CreateAsync(new IdentityRoles(UserRoles.Role_Admin)).GetAwaiter().GetResult();
-			//	_roleManager.CreateAsync(new IdentityRoles(UserRoles.Role_User_Indi)).GetAwaiter().GetResult();
-
-			//}
 
 			var userExists = await _userManager.FindByNameAsync(model.UserName);
 		
 			if (userExists != null)
-				return StatusCode(StatusCodes.Status500InternalServerError);
-
-			var identityUser = new IdentityManual()
 			{
-				UserName = model.UserName,
-				Email = model.Email,
-				PasswordHash = model.Password
-			};
-			var result = await _userManager.CreateAsync(identityUser, model.Password);
-			if (!result.Succeeded)
-				return StatusCode(StatusCodes.Status500InternalServerError);
+				_responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "User already exists");
 
-			return Ok();
+				return BadRequest(_responseObject);
+			}
+
+				var identityUser = new IdentityManual()
+				{
+					UserName = model.UserName,
+					Email = model.Email,
+					PasswordHash = model.Password
+				};
+
+				var result = await _userManager.CreateAsync(identityUser, model.Password);
+				if (!result.Succeeded)
+					return StatusCode(StatusCodes.Status500InternalServerError);		
+			var Token = _token.TokenGenerator(identityUser);
+
+			var tokenToReturn = new Tokenmodel();
+			tokenToReturn.Token = Token;
+			_responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Successfull", tokenToReturn);
+			return Ok(_responseObject);
 		}
 
 		[HttpPost("login")]
-		public async Task<IActionResult> Login(IdentityUserDto model)
+		public async Task<IActionResult> Login(LoginDto model)
 		{
-			var user = await _userManager.FindByNameAsync(model.UserName);
+			var user = await _userManager.FindByEmailAsync(model.Email);
 
 			if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
 			{
 				var userRoles = await _userManager.GetRolesAsync(user);
-
 				var Token = _token.TokenGenerator(user);
 
 				var tokenToReturn = new Tokenmodel();
 				tokenToReturn.Token = Token;
-
-				return Ok(tokenToReturn);
+				_responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Successfull", tokenToReturn);
+				return Ok(_responseObject);
 			}
-			return NotFound();
+			else
+			{
+				_responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
+				return NotFound(_responseObject);
 
+			}
+			
 		}
 
 

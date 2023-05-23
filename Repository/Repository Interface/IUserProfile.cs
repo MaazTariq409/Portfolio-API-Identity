@@ -3,7 +3,7 @@ using Portfolio_API.Models;
 
 namespace Portfolio_API.Repository.Repository_Interface
 {
-    public interface IAbout
+    public interface IUserProfile
     {
         public UserProfile GetAbout (int id);
 
@@ -11,7 +11,7 @@ namespace Portfolio_API.Repository.Repository_Interface
 
         public void removeAbout (int id, int aboutId);
 
-        public void updateAbout (int id, AboutDto about);
+        public void updateAbout (int id, UserProfileDto about);
 
         public bool checkAbout (int id);
     }

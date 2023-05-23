@@ -6,47 +6,49 @@ using Portfolio_API.Repository.Repository_Interface;
 
 namespace Portfolio_API.Repository
 {
-    public class AboutRepository : IAbout
+    public class UserProfileRepository : IUserProfile
     {
         private readonly PorfolioContext _context;
 
-        public AboutRepository(PorfolioContext context)
+        public UserProfileRepository(PorfolioContext context)
         {
             _context = context;
         }
 
-        public bool AddAbout(int id, UserProfile about)
+        public bool AddAbout(int id, UserProfile userProfile)
         {
-			var users = _context.userProfiles.FirstOrDefault(x => x.Id == id);
+			var users = _context.identityManuals.FirstOrDefault(x => x.Id == "id");
 		
             if (users != null)
 			{
 				new UserProfile()
 				{
-					ProfileUrl = about.ProfileUrl,
-					Introduction = about.Introduction,
-					Description = about.Description,
-					Name = about.Name,
-					Dob = about.Dob,
-					Email = about.Email,
-					Linkedin = about.Linkedin,
-					Github = about.Github,
-					PhoneNo = about.PhoneNo,
-					Address = about.Address,
-					Language = about.Language,
-					Gender = about.Gender
+					ProfileUrl = userProfile.ProfileUrl,
+					Introduction = userProfile.Introduction,
+					Description = userProfile.Description,
+					Name = userProfile.Name,
+					Dob = userProfile.Dob,
+					Email = userProfile.Email,
+					Linkedin = userProfile.Linkedin,
+					Github = userProfile.Github,
+					PhoneNo = userProfile.PhoneNo,
+					Address = userProfile.Address,
+					Language = userProfile.Language,
+					Gender = userProfile.Gender
 				};
 
 				_context.SaveChanges();
             }
-            return false;
+            return true;
         }
 
         public bool checkAbout(int id)
         {
-			var User = _context.userProfiles.FirstOrDefault(x => x.Id == id);
+			var users = _context.identityManuals.FirstOrDefault(x => x.Id == "id");
 
-            if (User == null)
+			// var User = _context.userProfiles.FirstOrDefault(x => x.Id == id);
+
+            if (users == null)
             {
                 return false;
             }
@@ -55,6 +57,7 @@ namespace Portfolio_API.Repository
 
         public UserProfile GetAbout(int id)
         {
+
 			var UserAbout = _context.userProfiles.FirstOrDefault(x => x.Id == id);
 
             return UserAbout;
@@ -70,7 +73,7 @@ namespace Portfolio_API.Repository
             }
         }
 
-        public void updateAbout(int id, AboutDto about)
+        public void updateAbout(int id, UserProfileDto about)
         {
 			var UserAbout = _context.userProfiles.FirstOrDefault(x => x.Id == id);
 

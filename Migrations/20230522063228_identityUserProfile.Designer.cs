@@ -12,8 +12,8 @@ using Portfolio_API.Data;
 namespace Portfolio_API.Migrations
 {
     [DbContext(typeof(PorfolioContext))]
-    [Migration("20230522044157_userProfileChanges")]
-    partial class userProfileChanges
+    [Migration("20230522063228_identityUserProfile")]
+    partial class identityUserProfile
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

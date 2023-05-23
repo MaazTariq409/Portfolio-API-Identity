@@ -8,8 +8,8 @@ namespace Portfolio_API.MapperProfiles
     {
         public AboutProfile()
         {
-            CreateMap<UserProfile, AboutDto>();
-            CreateMap<AboutDto, UserProfile>();
+            CreateMap<UserProfile, UserProfileDto>();
+            CreateMap<UserProfileDto, UserProfile>();
         }
     }
 }

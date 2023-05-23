@@ -23,12 +23,10 @@ namespace Portfolio_API
                 builder.Configuration.GetConnectionString("DefaultConnection")
                 ));
 
-            //builder.Services.AddScoped<IUser, UserRepository>();
-            builder.Services.AddScoped<IAbout, AboutRepository>();
+            builder.Services.AddScoped<IUserProfile, UserProfileRepository>();
             builder.Services.AddScoped<ISkills, SkillsRepository>();
             builder.Services.AddScoped<IEducation, EducationRepository>();
             builder.Services.AddScoped<IProjects, ProjectsRepository>();
-
             builder.Services.AddScoped<IUserExperience, UserExperienceRepository>();
 
 
@@ -41,8 +39,6 @@ namespace Portfolio_API
 			builder.Services.AddIdentity<IdentityManual, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
 				.AddEntityFrameworkStores<PorfolioContext>()
 				.AddDefaultTokenProviders();
-			//builder.Services.AddDefaultIdentity<IdentityUser<int>>(options => options.SignIn.RequireConfirmedAccount = true)
-	        //.AddEntityFrameworkStores<PorfolioContext>();
 
 			// Configure the scope for IdentityUser
 			builder.Services.AddScoped<IdentityUser>();

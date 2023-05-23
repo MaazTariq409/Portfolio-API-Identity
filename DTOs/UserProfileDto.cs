@@ -4,7 +4,7 @@ using System.Xml.Linq;
 
 namespace Portfolio_API.DTOs
 {
-    public class AboutDto
+    public class UserProfileDto
     {
         [Required(ErrorMessage = "Please upload an image")]
         public string ProfileUrl { get; set; }
@@ -30,10 +30,7 @@ namespace Portfolio_API.DTOs
         public string Language { get; set; }
         [Required]
         public string Gender { get; set; }
-        
-        
-        
-        
+      
         
     }
 }

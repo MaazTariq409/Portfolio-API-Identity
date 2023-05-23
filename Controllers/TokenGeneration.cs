@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Portfolio_API.Data;
-using Portfolio_API.Migrations;
 using Portfolio_API.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -34,9 +33,9 @@ namespace Portfolio_API.Controllers
             var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var TokenClaims = new List<Claim>();
-            //TokenClaims.Add(new Claim("UserId", user.Id.ToString()));
+            TokenClaims.Add(new Claim("UserId", user.Id.ToString()));
             TokenClaims.Add(new Claim("UserName", user.UserName.ToString()));
-            //TokenClaims.Add(new Claim("Email", user.Email.ToString()));
+            TokenClaims.Add(new Claim("Email", user.Email.ToString()));
 
             var jwtSecurityToken = new JwtSecurityToken(
                 _configuration["Authentication:Issuer"],
