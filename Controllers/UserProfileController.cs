@@ -48,31 +48,31 @@ namespace Portfolio_API.Controllers
 
         // POST api/<AboutController>
         [HttpPost]
-        public ActionResult AddAboutDetails (UserProfileDto about)
+        public ActionResult AddAboutDetails (UserProfileDto userProfileDetails)
         {
-            var id = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "Id")?.Value);
+            var id = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
 
-            if (id == 0)
+            if (id == null)
             {
 				_responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
                 return NotFound(_responseObject);
 			}
             else
             {
-				var finalAbout = _mapper.Map<UserProfile>(about);
+				var finalAbout = _mapper.Map<UserProfile>(userProfileDetails);
 
-				var aboutAdded = _userProfileRepository.AddAbout(id, finalAbout);
+                var aboutAdded = _userProfileRepository.AddAbout(id, finalAbout);
 
-                if(aboutAdded)
+                if (aboutAdded)
                 {
                     _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "About Details Added Succesfully");
                 }
-				else
+                else
                 {
                     _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "About Details already Exists");
                     return BadRequest(_responseObject);
                 }
-                    
+
             }
 
 			return Ok(_responseObject);

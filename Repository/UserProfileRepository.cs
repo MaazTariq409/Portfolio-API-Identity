@@ -3,6 +3,8 @@ using Portfolio_API.Data;
 using Portfolio_API.DTOs;
 using Portfolio_API.Models;
 using Portfolio_API.Repository.Repository_Interface;
+using System.Net;
+using System.Xml.Linq;
 
 namespace Portfolio_API.Repository
 {
@@ -15,32 +17,41 @@ namespace Portfolio_API.Repository
             _context = context;
         }
 
-        public bool AddAbout(int id, UserProfile userProfile)
+        public bool AddAbout(string id, UserProfile userProfileDetails)
         {
-			var users = _context.identityManuals.FirstOrDefault(x => x.Id == "id");
-		
-            if (users != null)
-			{
-				new UserProfile()
-				{
-					ProfileUrl = userProfile.ProfileUrl,
-					Introduction = userProfile.Introduction,
-					Description = userProfile.Description,
-					Name = userProfile.Name,
-					Dob = userProfile.Dob,
-					Email = userProfile.Email,
-					Linkedin = userProfile.Linkedin,
-					Github = userProfile.Github,
-					PhoneNo = userProfile.PhoneNo,
-					Address = userProfile.Address,
-					Language = userProfile.Language,
-					Gender = userProfile.Gender
-				};
+            var identityUser = _context.identityManuals.FirstOrDefault(x => x.Id == id);
 
-				_context.SaveChanges();
+            if (identityUser != null)
+            {
+                identityUser.UserProfile = userProfileDetails;
+                _context.SaveChanges();
+                return true;
             }
-            return true;
+            else
+                return false;
         }
+
+            //if (identityUser != null)
+            //{
+            //    userProfile.Name = userProfileDetails.Name;
+            //    userProfile.Email = userProfileDetails.Email;
+            //    userProfile.PhoneNo = userProfileDetails.PhoneNo;
+            //    userProfile.Dob = userProfileDetails.Dob;
+            //    userProfile.Description = userProfileDetails.Description;
+            //    userProfile.ProfileUrl = userProfileDetails.ProfileUrl;
+            //    userProfile.Github = userProfileDetails.Github;
+            //    userProfile.Linkedin = userProfileDetails.Linkedin;
+            //    userProfile.Gender = userProfileDetails.Gender;
+            //    userProfile.Address = userProfileDetails.Address;
+            //    userProfile.Introduction = userProfileDetails.Introduction;
+            //    userProfile.Language = userProfileDetails.Language;
+
+            //    _context.SaveChanges();
+
+            //    return true;
+            //}else
+            //return false;
+        //}
 
         public bool checkAbout(int id)
         {

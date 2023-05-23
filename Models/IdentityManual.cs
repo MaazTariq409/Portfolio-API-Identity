@@ -7,7 +7,7 @@ namespace Portfolio_API.Models
 {
 	public class IdentityManual : IdentityUser
 	{
-
+		public UserProfile UserProfile { get; set; }
 	}
 	public class IdentityRoles : IdentityRole
 	{
