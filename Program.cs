@@ -9,6 +9,7 @@ using Portfolio_API.Models;
 using Portfolio_API.Repository;
 using Portfolio_API.Repository.Repository_Interface;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace Portfolio_API
 {
@@ -29,13 +30,16 @@ namespace Portfolio_API
             builder.Services.AddScoped<IEducation, EducationRepository>();
             builder.Services.AddScoped<IProjects, ProjectsRepository>();
             builder.Services.AddScoped<IUserExperience, UserExperienceRepository>();
+            builder.Services.AddScoped<IInstitute, InstituteRepository>();
+            builder.Services.AddScoped<ICity, CityRepository>();
+            builder.Services.AddTransient<ICountry, CountryRepository>();
+            builder.Services.AddTransient<IUserBlogs, UserBlogRepository>();
 
 
             builder.Services.AddTransient<TokenGeneration>();
 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-            builder.Services.AddControllers();
 			// Add Identity
 			builder.Services.AddIdentity<IdentityManual, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
 				.AddEntityFrameworkStores<PorfolioContext>()
@@ -47,6 +51,16 @@ namespace Portfolio_API
 
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();
+
+            builder.Services.AddControllers()
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+            });
+
+            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            builder.Services.AddEndpointsApiExplorer();
+            
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddAuthentication(options =>

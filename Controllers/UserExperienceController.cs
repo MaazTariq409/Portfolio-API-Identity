@@ -39,7 +39,9 @@ namespace Portfolio_API.Controllers
 
             var experienceFromDB = _userExperienceRepository.GetUserExperience(userId);
 
-            var experienceDto = _mapper.Map<IEnumerable<UserExperienceDto>>(experienceFromDB);
+            var approvedExp = experienceFromDB.Where(x => x.status != "pending").ToList();
+
+            var experienceDto = _mapper.Map<IEnumerable<UserExperienceDto>>(approvedExp);
 
             _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull", experienceDto);
 
@@ -74,7 +76,7 @@ namespace Portfolio_API.Controllers
         public ActionResult UpdateUserExperience(int experienceId, [FromBody] UserExperienceDto userExperience)
         {
             var userId = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
-            if (userId == 0 || experienceId == 0)
+            if (userId == 0 )
             {
                 _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "User or Exprience id not found");
                 return NotFound(_responseObject);
@@ -95,7 +97,7 @@ namespace Portfolio_API.Controllers
         {
             var userId = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
 
-            if (userId == 0 || experienceId == 0)
+            if (userId == 0 )
             {
                 _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "User not found");
                 return NotFound(_responseObject);

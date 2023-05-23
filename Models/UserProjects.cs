@@ -20,5 +20,7 @@ namespace Portfolio_API.Models
 		[ValidateNever]
 		public UserProfile user { get; set; }
 		public int ProfileID { get; set; }
-	}
+	
+
+        public string status { get; set; } = "pending";
 }

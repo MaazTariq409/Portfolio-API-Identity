@@ -1,12 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace Portfolio_API.Models
+namespace Portfolio_API.DTOs.Admin
 {
-    public class Education
+    public class AdminGetEducation
     {
-        [Key]
         public int Id { get; set; }
         [Required]
         public string institute { get; set; }
@@ -20,10 +17,6 @@ namespace Portfolio_API.Models
         [Required]
         public string passingYear { get; set; }
         public string achievement { get; set; }
-		[ForeignKey("ProfileID")]
-		[ValidateNever]
-		public UserProfile user { get; set; }
-		public int ProfileID { get; set; }
         public string status { get; set; } = "pending";
-
+    }
 }

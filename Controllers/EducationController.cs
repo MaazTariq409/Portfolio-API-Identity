@@ -36,7 +36,10 @@ namespace Portfolio_API.Controllers
             }
 
             var educationDetails = _EducationRepository.GetDetails(userId);
-            var finalEduDetail = _mapper.Map<IEnumerable<EducationDto>>(educationDetails);
+
+            var ApprovedEduDetails = educationDetails.Where(x => x.status != "pending").ToList();
+
+            var finalEduDetail = _mapper.Map<IEnumerable<EducationDto>>(ApprovedEduDetails);
             _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull", finalEduDetail);
 
             return Ok(_responseObject);
@@ -62,12 +65,12 @@ namespace Portfolio_API.Controllers
         }
 
         //// PUT api/<EducationController>/5
-        [HttpPut]
-        public ActionResult UpdateEdu(int eduId, EducationDto Edu)
+        [HttpPut("{eduId}")]
+        public ActionResult UpdateEdu(int eduId, [FromBody] EducationDto Edu)
         {
             var id = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
 
-            if (id == 0 || eduId == 0)
+            if (id == 0 )
             {
                 _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
                 return NotFound(_responseObject);
@@ -86,7 +89,7 @@ namespace Portfolio_API.Controllers
         {
             var id = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
 
-            if (id == 0 || eduId == 0)
+            if (id == 0 )
             {
                 _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
                 return NotFound(_responseObject);
