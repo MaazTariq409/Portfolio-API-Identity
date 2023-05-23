@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Portfolio_API.Data;
 using Portfolio_API.DTOs;
 using Portfolio_API.Models;
@@ -9,10 +10,14 @@ namespace Portfolio_API.Repository
     public class AboutRepository : IAbout
     {
         private readonly PorfolioContext _context;
+        private readonly IMapper _mapper;
 
-        public AboutRepository(PorfolioContext context)
+
+        public AboutRepository(PorfolioContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
+
         }
 
         public bool AddAbout(int id, About about)
@@ -72,9 +77,14 @@ namespace Portfolio_API.Repository
                 UserAbout.Address = about.Address;
                 UserAbout.Introduction = about.Introduction;
                 UserAbout.Language = about.Language;
-
-                _context.SaveChanges();
             }
+            else
+            {
+                var about1 = _mapper.Map<About>(about);
+                AddAbout(id, about1);
+            }
+            _context.SaveChanges();
+
         }
     }
 }
