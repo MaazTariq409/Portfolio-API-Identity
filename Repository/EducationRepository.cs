@@ -68,7 +68,8 @@ namespace Portfolio_API.Repository
 
             if (usersEducation != null)
             {
-                var edu = usersEducation.UserProfile.Education[eduId];
+                var edu = usersEducation.UserProfile.Education.FirstOrDefault(x => x.Id == eduId);
+
                 if (edu != null)
                 {
                     edu.degreeName = Edu.degreeName;

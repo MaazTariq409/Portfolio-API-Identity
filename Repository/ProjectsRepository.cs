@@ -12,43 +12,44 @@ namespace Portfolio_API.Repository
         {
             _context = context;
         }
-        public IEnumerable<UserProjects> GetProjectsByUserID(int id)
+        public IEnumerable<UserProjects> GetProjectsByUserID(string id)
         {
-            return _context.userProjects.Where(p => p.ProfileID == id).ToList();
+            var usersProject = _context.identityManuals.Include(a => a.UserProfile.UserProjects).FirstOrDefault(b => b.Id == id);
+            return usersProject.UserProfile.UserProjects;
         }
-        public void AddProjectsByUserID(int id, IEnumerable<UserProjects> projects)
+        public void AddProjectsByUserID(string id, IEnumerable<UserProjects> projects)
         {
-            var users = _context.userProfiles.Include(x => x.UserProjects).FirstOrDefault(p => p.Id == id);
+            var usersProject = _context.identityManuals.Include(a => a.UserProfile.UserProjects).FirstOrDefault(b => b.Id == id);
 
             foreach (var project in projects)
             {
-                users.UserProjects.Add(project);
+                usersProject.UserProfile.UserProjects.Add(project);
             }
             _context.SaveChanges();
         }
 
-        public void removeProjectsByUserID(int id, int projectId)
+        public void removeProjectsByUserID(string id, int projectId)
         {
-            var users = _context.userProfiles.Include(x => x.UserProjects).FirstOrDefault(p => p.Id == id);
+            var usersProject = _context.identityManuals.Include(a => a.UserProfile.UserProjects).FirstOrDefault(b => b.Id == id);
 
-            if(users != null)
+            if (usersProject != null)
             {
-                var project = users.UserProjects[projectId];
+                var project = usersProject.UserProfile.UserProjects[projectId];
                 if(project != null)
                 {
-                    users.UserProjects.Remove(project);
+                    usersProject.UserProfile.UserProjects.Remove(project);
                     _context.SaveChanges();
                 }
             }
         }
 
-        public void updateProjectsByUserID(int id, int projectId, UserProjects projects)
+        public void updateProjectsByUserID(string id, int projectId, UserProjects projects)
         {
-            var users = _context.userProfiles.Include(x => x.UserProjects).FirstOrDefault(p => p.Id == id);
+            var usersProject = _context.identityManuals.Include(a => a.UserProfile.UserProjects).FirstOrDefault(b => b.Id == id);
 
-            if(users != null)
+            if (usersProject != null)
             {
-                var project = users.UserProjects.FirstOrDefault(p => p.Id == projectId);
+                var project = usersProject.UserProfile.UserProjects.FirstOrDefault(p => p.Id == projectId);
 
                 if(project != null)
                 {

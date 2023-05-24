@@ -5,10 +5,10 @@ namespace Portfolio_API.Repository.Repository_Interface
 {
 	public interface IProjects
     {
-		public IEnumerable<UserProjects> GetProjectsByUserID(int id);
-		public void AddProjectsByUserID(int id, IEnumerable<UserProjects> projects);
-		public void updateProjectsByUserID(int id, int projectId, UserProjects projects);
-		public void removeProjectsByUserID(int id, int projectId);
+		public IEnumerable<UserProjects> GetProjectsByUserID(string id);
+		public void AddProjectsByUserID(string id, IEnumerable<UserProjects> projects);
+		public void updateProjectsByUserID(string id, int projectId, UserProjects projects);
+		public void removeProjectsByUserID(string id, int projectId);
 
 
 	}

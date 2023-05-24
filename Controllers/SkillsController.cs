@@ -73,7 +73,7 @@ namespace Portfolio_API.Controllers
 
 
         [HttpPut("{skillId}")]
-        public ActionResult UpdateUserSkill(int skillId, [FromBody] SkillsDto userSkill)
+        public ActionResult UpdateUserSkill(int skillId, SkillsDto userSkill)
         {
             var userId = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
             if (userId == null )

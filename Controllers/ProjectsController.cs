@@ -28,7 +28,7 @@ namespace Portfolio_API.Controllers
         [HttpGet]
         public ActionResult<List<UserProjectsDto>> GetUserProjects()
         {
-            var userId = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
+            var userId = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
 
             if(userId == null)
             {
@@ -48,9 +48,9 @@ namespace Portfolio_API.Controllers
         [HttpPost]
         public ActionResult AddUserProjects([FromBody] IEnumerable<UserProjectsDto> userProject)
         {
-            var userId = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
+            var userId = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
 
-            if(userId == 0)
+            if (userId == null)
             {
                 _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not Found");
                 return NotFound(_responseObject);
@@ -66,13 +66,13 @@ namespace Portfolio_API.Controllers
         }
 
         //[AllowAnonymous]
-        [HttpPut]
+        [HttpPut("{projectId}")]
         public ActionResult UpdateUserProjects(int projectId, [FromBody] UserProjectsDto userProject)
         {
 
-            var userId = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
+            var userId = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
 
-            if (userId == 0)
+            if (userId == null)
             {
                 _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not Found");
                 return NotFound(_responseObject);
@@ -91,9 +91,9 @@ namespace Portfolio_API.Controllers
         [HttpDelete]
         public IActionResult DeleteUserProject(int projectId)
         {
-            var userId = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
+            var userId = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
 
-            if (userId == 0 || projectId == 0)
+            if (userId == null || projectId == null)
             {
                 _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
                 return NotFound(_responseObject);
