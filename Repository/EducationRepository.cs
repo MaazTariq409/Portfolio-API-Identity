@@ -17,33 +17,29 @@ namespace Portfolio_API.Repository
 
         public IEnumerable<Education> GetDetails(string id)
         {
-            //var user = _context.user.Include(x => x.Education).FirstOrDefault(user => user.Id == id);
-            //var EducationDetails = user.Education.ToList();
-            var user = _context.identityManuals.Include(x => x.UserProfile.Education).FirstOrDefault(x => x.Id == id);
-
-            //var education = _context.educations.Where(x => x.ProfileID == id).ToList();
-            return user;
+            var usersEducation = _context.identityManuals.Include(a => a.UserProfile.Education).FirstOrDefault(b => b.Id == id);
+            return usersEducation.UserProfile.Education;
         }
 
-        public void AddEducation(int id, IEnumerable<Education> Edu)
+        public void AddEducation(string id, IEnumerable<Education> Edu)
         {
-            var user = _context.userProfiles.Include(x => x.Education).FirstOrDefault(x => x.Id == id );
-            if (user != null)
+            var usersEducation = _context.identityManuals.Include(a => a.UserProfile.Education).FirstOrDefault(b => b.Id == id);
+            if (usersEducation != null)
             {
                 foreach (var item in Edu)
                 {
-                    user.Education.Add(item);
+                    usersEducation.UserProfile.Education.Add(item);
                 }
                 _context.SaveChanges();
             }
         }
 
-        public void removeEducation(int userId, int eduId)
+        public void removeEducation(string userId, int eduId)
         {
-            var users = _context.userProfiles.Include(x => x.Education).FirstOrDefault(x => x.Id == userId);
-            if (users != null)
+            var usersEducation = _context.identityManuals.Include(a => a.UserProfile.Education).FirstOrDefault(b => b.Id == userId);
+            if (usersEducation != null)
             {
-                var education = users.Education[eduId];
+                var education = usersEducation.UserProfile.Education[eduId];
                 if (education != null)
                 {
                     _context.Remove(education);
@@ -52,12 +48,12 @@ namespace Portfolio_API.Repository
             }
         }
 
-        public void removeEducationRequest(int userId, int eduId)
+        public void removeEducationRequest(string userId, int eduId)
         {
-            var users = _context.userProfiles.Include(x => x.Education).FirstOrDefault(x => x.Id == userId);
-            if (users != null)
+            var usersEducation = _context.identityManuals.Include(a => a.UserProfile.Education).FirstOrDefault(b => b.Id == userId);
+            if (usersEducation != null)
             {
-                var education = users.Education.FirstOrDefault(x => x.Id == eduId);
+                var education = usersEducation.UserProfile.Education.FirstOrDefault(x => x.Id == eduId);
                 if (education != null)
                 {
                     _context.Remove(education);
@@ -66,13 +62,13 @@ namespace Portfolio_API.Repository
             }
         }
 
-        public void updateEducation(int id, int eduId, Education Edu)
+        public void updateEducation(string id, int eduId, Education Edu)
         {
-            var user = _context.userProfiles.Include(x => x.Education).FirstOrDefault(x => x.Id == id);
+            var usersEducation = _context.identityManuals.Include(a => a.UserProfile.Education).FirstOrDefault(b => b.Id == id);
 
-            if (user != null)
+            if (usersEducation != null)
             {
-                var edu = user.Education[eduId];
+                var edu = usersEducation.UserProfile.Education[eduId];
                 if (edu != null)
                 {
                     edu.degreeName = Edu.degreeName;
@@ -90,13 +86,13 @@ namespace Portfolio_API.Repository
             }
         }
 
-        public void updateEducationRequest(int id, int eduId, Education Edu)
+        public void updateEducationRequest(string id, int eduId, Education Edu)
         {
-            var user = _context.userProfiles.Include(x => x.Education).FirstOrDefault(x => x.Id == id);
+            var usersEducation = _context.identityManuals.Include(a => a.UserProfile.Education).FirstOrDefault(b => b.Id == id);
 
-            if (user != null)
+            if (usersEducation != null)
             {
-                var edu = user.Education.FirstOrDefault(x => x.Id == eduId);
+                var edu = usersEducation.UserProfile.Education.FirstOrDefault(x => x.Id == eduId);
                 if (edu != null)
                 {
                     edu.degreeName = Edu.degreeName;

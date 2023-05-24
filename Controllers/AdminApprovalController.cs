@@ -33,9 +33,9 @@ namespace Portfolio_API.Controllers
 
         // GET: api/<EducationController>
         [HttpGet("geteducation")]
-        public ActionResult<IEnumerable<AdminGetEducation>> GetEducationDetailsAdmin(int userId)
+        public ActionResult<IEnumerable<AdminGetEducation>> GetEducationDetailsAdmin(string userId)
         {
-            if (userId == 0)
+            if (userId == null)
             {
                 _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
                 return NotFound(_responseObject);
@@ -54,7 +54,7 @@ namespace Portfolio_API.Controllers
         // Education Approval Endpoints
 
         [HttpPut("education/{eduId}")]
-        public IActionResult updateEducation(int userId, int eduId, AdminPostEducationDto edu)
+        public IActionResult updateEducation(string userId, int eduId, AdminPostEducationDto edu)
         {
             if (edu == null)
             {
@@ -73,7 +73,7 @@ namespace Portfolio_API.Controllers
 
         // DELETE api/<AdminApprovalController>/5
         [HttpDelete("education/{eduId}")]
-        public IActionResult DeleteEducation(int userId, int eduId)
+        public IActionResult DeleteEducation(string userId, int eduId)
         {
             if (eduId == 0)
             {

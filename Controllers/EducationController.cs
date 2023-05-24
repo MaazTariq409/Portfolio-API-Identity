@@ -28,8 +28,8 @@ namespace Portfolio_API.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<EducationDto>> GetEducationDetails()
         {
-            var userId = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
-            if (userId == 0)
+            var userId = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
+            if (userId == null)
             {
                 _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
                 return NotFound(_responseObject);
@@ -49,16 +49,16 @@ namespace Portfolio_API.Controllers
         [HttpPost]
         public ActionResult AddEduDetails(IEnumerable<EducationDto> Edu)
         {
-            var id = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
+            var userId = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
 
-            if (id == 0)
+            if (userId == null)
             {
                 _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
                 return NotFound(_responseObject);
             }
 
             var finalEdu = _mapper.Map<IEnumerable<Education>>(Edu);
-            _EducationRepository.AddEducation(id, finalEdu);
+            _EducationRepository.AddEducation(userId, finalEdu);
             _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Education Details added succesfully");
 
             return Ok(_responseObject);
@@ -68,16 +68,16 @@ namespace Portfolio_API.Controllers
         [HttpPut("{eduId}")]
         public ActionResult UpdateEdu(int eduId, [FromBody] EducationDto Edu)
         {
-            var id = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
+            var userId = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
 
-            if (id == 0 )
+            if (userId == null )
             {
                 _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
                 return NotFound(_responseObject);
             }
 
             var finalEdu = _mapper.Map<Education>(Edu);
-            _EducationRepository.updateEducation(id, eduId, finalEdu);
+            _EducationRepository.updateEducation(userId, eduId, finalEdu);
             _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Education Details Updated succesfully");
 
             return Ok(_responseObject);
@@ -87,14 +87,14 @@ namespace Portfolio_API.Controllers
         [HttpDelete("{eduId}")]
         public ActionResult DeleteEdu (int eduId)
         {
-            var id = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
+            var userId = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
 
-            if (id == 0 )
+            if (userId == null )
             {
                 _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
                 return NotFound(_responseObject);
             }
-            _EducationRepository.removeEducation(id, eduId);
+            _EducationRepository.removeEducation(userId, eduId);
             _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Education Details Deleted succesfully");
 
             return Ok(_responseObject);
