@@ -31,6 +31,8 @@ namespace Portfolio_API.Controllers
             _mapper = mapper;
         }
 
+
+
         // GET: api/<EducationController>
         [HttpGet("geteducation")]
         public ActionResult<IEnumerable<AdminGetEducation>> GetEducationDetailsAdmin(string userId)

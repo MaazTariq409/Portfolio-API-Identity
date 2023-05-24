@@ -14,5 +14,7 @@ namespace Portfolio_API.Repository.Repository_Interface
         public void updateAbout (string id, UserProfileDto about);
 
         public bool checkAbout (string id);
+
+        public IEnumerable<IdentityManual> getUsers();
     }
 }

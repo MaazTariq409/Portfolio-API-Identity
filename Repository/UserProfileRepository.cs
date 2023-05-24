@@ -83,5 +83,12 @@ namespace Portfolio_API.Repository
                 _context.SaveChanges();
             }
         }
+
+        public IEnumerable<IdentityManual> getUsers()
+        {
+            var users = _context.identityManuals
+            .Include(about => about.UserProfile).ToList();
+            return users;
+        }
     }
 }

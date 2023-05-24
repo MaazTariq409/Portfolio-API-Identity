@@ -17,10 +17,8 @@ namespace Portfolio_API.Repository
 
         public IEnumerable<UserBlogs> GetByUserId(string id)
         {
-            var user = _context.identityManuals.FirstOrDefault(x => x.Id == id);
-
-            var allBlogs = _context.userBlogs.Where(x => x.UserProfileID == user.UserProfile.Id).Include(x => x.UserProfile).ToList();
-            return allBlogs;
+            var user = _context.identityManuals.Include(x => x.UserProfile.UserBlogs).FirstOrDefault(x => x.Id == id);
+            return user.UserProfile.UserBlogs;
         }
 
         public IEnumerable<UserBlogs> GetAll()
@@ -37,7 +35,8 @@ namespace Portfolio_API.Repository
 
         public void AddBlogs(string id, IEnumerable<UserBlogs> userBlogs)
         {
-            var user = _context.identityManuals.FirstOrDefault(x => x.Id == id);
+            var user = _context.identityManuals.Include(x => x.UserProfile.UserBlogs).FirstOrDefault(x => x.Id == id);
+
             if (user != null)
             {
                 foreach (var item in userBlogs)
@@ -50,7 +49,7 @@ namespace Portfolio_API.Repository
 
         public void removeBlogs(string id, int blogId)
         {
-            var users = _context.identityManuals.FirstOrDefault(x => x.Id == id);
+            var users = _context.identityManuals.Include(x => x.UserProfile.UserBlogs).FirstOrDefault(x => x.Id == id);
             if (users != null)
             {
                 var blogs = users.UserProfile.UserBlogs[blogId];
@@ -64,7 +63,7 @@ namespace Portfolio_API.Repository
 
         public void removeBlogsRequest(string userId, int blogId)
         {
-            var users = _context.identityManuals.FirstOrDefault(x => x.Id == userId);
+            var users = _context.identityManuals.Include(x => x.UserProfile.UserBlogs).FirstOrDefault(x => x.Id == userId);
             if (users != null)
             {
                 var blog = users.UserProfile.UserBlogs.FirstOrDefault(x => x.Id == blogId);
@@ -78,7 +77,7 @@ namespace Portfolio_API.Repository
 
         public void updateblogs(string id, int blogsId, UserBlogs userBlogs)
         {
-            var user = _context.identityManuals.FirstOrDefault(x => x.Id == id);
+            var user = _context.identityManuals.Include(x => x.UserProfile.UserBlogs).FirstOrDefault(x => x.Id == id);
 
             if (user != null)
             {
@@ -101,7 +100,7 @@ namespace Portfolio_API.Repository
 
         public void updateBlogsRequest(string id, int blogId, UserBlogs userBlogs)
         {
-            var user = _context.identityManuals.FirstOrDefault(x => x.Id == id);
+            var user = _context.identityManuals.Include(x => x.UserProfile.UserBlogs).FirstOrDefault(x => x.Id == id);
 
             if (user != null)
             {

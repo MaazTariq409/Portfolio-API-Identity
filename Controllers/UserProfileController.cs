@@ -26,7 +26,7 @@ namespace Portfolio_API.Controllers
         }
 
         // GET: api/<AboutController>
-        [HttpGet("/getabout")]
+        [HttpGet]
         public ActionResult<IEnumerable<UserProfileDto>> aboutDetails()
         {
             var id = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
@@ -114,6 +114,13 @@ namespace Portfolio_API.Controllers
 
 			}
 			return Ok(_responseObject);
+        }
+
+        [HttpGet("/api/users")]
+        public ActionResult<IEnumerable<UserProfile>> GetAllUsers()
+        {
+            var users = _userProfileRepository.getUsers();
+            return Ok(users);
         }
     }
 }
