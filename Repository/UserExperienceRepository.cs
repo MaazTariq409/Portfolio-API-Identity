@@ -17,29 +17,33 @@ namespace Portfolio_API.Repository
 
 		}
 
-		public IEnumerable<UserExperience> GetUserExperience(int userid)
+		public IEnumerable<UserExperience> GetUserExperience(string userid)
 		{
-			return _context.userExperiences.Where(x => x.ProfileID == userid).ToList();
+            var user = _context.identityManuals.Include(x => x.UserProfile.UserExperiences).FirstOrDefault(x => x.Id == userid);
+
+            return user.UserProfile.UserExperiences;
 		}
 
-		public void AddUserExperience (int userid, IEnumerable<UserExperience> userExperiences)
+		public void AddUserExperience (string userid, IEnumerable<UserExperience> userExperiences)
 		{
-			var users = _context.userProfiles.Include(x => x.UserExperiences).FirstOrDefault(x => x.Id == userid);
-			foreach (var experience in userExperiences)
-			{
-                users.UserExperiences.Add(experience);
+            var user = _context.identityManuals.Include(x =>x.UserProfile.UserExperiences).FirstOrDefault(x => x.Id == userid);
+
+            foreach (var experience in userExperiences)
+            {
+                user.UserProfile.UserExperiences.Add(experience);
             }
-			_context.SaveChanges();
-		}
+            _context.SaveChanges();
+        }
 
-		public void UpdateUserExperience(int id, int userExperienceid, UserExperience userExperience)
+		public void UpdateUserExperience(string id, int userExperienceid, UserExperience userExperience)
 		{
-			var user = _context.userProfiles.Include(x => x.UserExperiences).FirstOrDefault(x => x.Id == id);
-			if (user != null)
-			{
-				var _Findexperience = user.UserExperiences[userExperienceid];
+            var user = _context.identityManuals.Include(x => x.UserProfile.UserExperiences).FirstOrDefault(x => x.Id == id);
+            
+            if (user != null)
+            {
+                var _Findexperience = user.UserProfile.UserExperiences[userExperienceid];
 
-				if (_Findexperience != null)
+                if (_Findexperience != null)
 				{
 					_Findexperience.jobTitle = userExperience.jobTitle;
 					_Findexperience.responsibility = userExperience.responsibility;
@@ -52,12 +56,13 @@ namespace Portfolio_API.Repository
 			}
 		}
 
-        public void UpdateUserExperienceRequest(int id, int userExperienceid, UserExperience userExperience)
+        public void UpdateUserExperienceRequest(string id, int userExperienceid, UserExperience userExperience)
         {
-            var user = _context.userProfiles.Include(x => x.UserExperiences).FirstOrDefault(x => x.Id == id);
+            var user = _context.identityManuals.Include(x => x.UserProfile.UserExperiences).FirstOrDefault(x => x.Id == id);
+
             if (user != null)
             {
-                var _Findexperience = user.UserExperiences.FirstOrDefault(x => x.Id == userExperienceid);
+                var _Findexperience = user.UserProfile.UserExperiences.FirstOrDefault(x => x.Id == userExperienceid);
 
                 if (_Findexperience != null)
                 {
@@ -66,18 +71,18 @@ namespace Portfolio_API.Repository
                     _Findexperience.companyName = userExperience.companyName;
                     _Findexperience.duration = userExperience.duration;
                     _Findexperience.status = userExperience.status;
-
                 }
                 _context.SaveChanges();
             }
         }
 
-        public void RemoveUserExperience(int id, int userexperienceid)
+        public void RemoveUserExperience(string id, int userexperienceid)
 		{
-			var users = _context.userProfiles.Include(x => x.UserExperiences).FirstOrDefault(x => x.Id == id);
-			if (users != null)
+            var user = _context.identityManuals.Include(x => x.UserProfile.UserExperiences).FirstOrDefault(x => x.Id == id);
+
+            if (user != null)
 			{
-				var experience = users.UserExperiences[userexperienceid];
+                var experience = user.UserProfile.UserExperiences[userexperienceid];
                 if (experience != null)
                 {
                     _context.Remove(experience);
@@ -86,12 +91,13 @@ namespace Portfolio_API.Repository
             }
 		}
 
-        public void RemoveUserExperienceRequest(int id, int userexperienceid)
+        public void RemoveUserExperienceRequest(string id, int userexperienceid)
         {
-            var users = _context.userProfiles.Include(x => x.UserExperiences).FirstOrDefault(x => x.Id == id);
-            if (users != null)
+            var user = _context.identityManuals.Include(x => x.UserProfile.UserExperiences).FirstOrDefault(x => x.Id == id);
+
+            if (user != null)
             {
-                var experience = users.UserExperiences.FirstOrDefault(x => x.Id == userexperienceid);
+                var experience = user.UserProfile.UserExperiences.FirstOrDefault(x => x.Id == userexperienceid);
                 if (experience != null)
                 {
                     _context.Remove(experience);

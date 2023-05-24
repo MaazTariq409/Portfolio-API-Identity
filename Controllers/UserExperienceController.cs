@@ -28,7 +28,7 @@ namespace Portfolio_API.Controllers
         [HttpGet]
         public ActionResult<List<UserExperienceDto>> GetUserExperiences()
         {
-            var userId = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
+            var userId = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
 
             if (userId == null)
             {
@@ -55,8 +55,8 @@ namespace Portfolio_API.Controllers
         [HttpPost]
         public ActionResult AddUserExperience([FromBody] IEnumerable<UserExperienceDto> userExperiences)
         {
-            var userId = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
-            if (userId == 0)
+            var userId = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
+            if (userId == null)
             {
                 _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "User not found in database");
                 return NotFound(_responseObject);
@@ -74,9 +74,9 @@ namespace Portfolio_API.Controllers
 
         [HttpPut("{experienceid}")]
         public ActionResult UpdateUserExperience(int experienceId, [FromBody] UserExperienceDto userExperience)
-        {
-            var userId = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
-            if (userId == 0 )
+            {
+            var userId = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
+            if (userId == null )
             {
                 _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "User or Exprience id not found");
                 return NotFound(_responseObject);
@@ -95,9 +95,9 @@ namespace Portfolio_API.Controllers
         [HttpDelete("{experienceId}")]
         public IActionResult DeleteUserExperience(int experienceId)
         {
-            var userId = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
+            var userId = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
 
-            if (userId == 0 )
+            if (userId == null )
             {
                 _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "User not found");
                 return NotFound(_responseObject);
