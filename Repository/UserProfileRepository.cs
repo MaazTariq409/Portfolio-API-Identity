@@ -63,7 +63,7 @@ namespace Portfolio_API.Repository
 
         public void updateAbout(string id, UserProfileDto about)
         {
-			var UserAbout = _context.identityManuals.FirstOrDefault(x => x.Id == id);
+			var UserAbout = _context.identityManuals.Include(x => x.UserProfile).FirstOrDefault(x => x.Id == id);
 
             if (UserAbout != null)
             {
