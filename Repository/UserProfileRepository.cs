@@ -53,7 +53,7 @@ namespace Portfolio_API.Repository
 
         public void removeAbout(string id, int aboutId)
         {
-            var users = _context.identityManuals.FirstOrDefault(x => x.Id == id);
+            var users = _context.identityManuals.Include(x => x.UserProfile).FirstOrDefault(x => x.Id == id);
             if (users != null)
             {
                 _context.Remove(users);
