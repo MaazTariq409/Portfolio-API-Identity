@@ -15,13 +15,14 @@ namespace Portfolio_API.Repository
             _context = context;
         }
 
-        public IEnumerable<Education> GetDetails(int id)
+        public IEnumerable<Education> GetDetails(string id)
         {
             //var user = _context.user.Include(x => x.Education).FirstOrDefault(user => user.Id == id);
             //var EducationDetails = user.Education.ToList();
+            var user = _context.identityManuals.Include(x => x.UserProfile.Education).FirstOrDefault(x => x.Id == id);
 
-            var education = _context.educations.Where(x => x.ProfileID == id).ToList();
-            return education;
+            //var education = _context.educations.Where(x => x.ProfileID == id).ToList();
+            return user;
         }
 
         public void AddEducation(int id, IEnumerable<Education> Edu)

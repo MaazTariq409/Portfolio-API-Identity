@@ -25,7 +25,6 @@ namespace Portfolio_API.Repository
 		}
 		public void AddSkillsByUserID(string id, IEnumerable<Skills> skills)
 		{
-            //var user = _context.userProfiles.Include(x => x.UserID == id);
            var users = _context.identityManuals.Include(x => x.UserProfile.Skills).FirstOrDefault(x => x.Id == id);
 			foreach (var item in skills)
 			{
@@ -38,7 +37,6 @@ namespace Portfolio_API.Repository
 		{
             var user = _context.identityManuals.Include(x => x.UserProfile.Skills).FirstOrDefault(x => x.Id == id);
 
-           // var user = _context.userProfiles.Include(x => x.Skills).FirstOrDefault(x => x.UserID.Equals(id));
 			if (user != null)
 			{
                 var _Findskill = user.UserProfile.Skills[skillId];
@@ -74,7 +72,6 @@ namespace Portfolio_API.Repository
 		{
             var users = _context.identityManuals.Include(x => x.UserProfile.Skills).FirstOrDefault(x => x.Id == id);
 
-            //var users = _context.userProfiles.Include(x => x.Skills).FirstOrDefault(x => x.UserID.Equals(id));
 			if (users != null)
 			{
                 var skill = users.UserProfile.Skills[skillId];

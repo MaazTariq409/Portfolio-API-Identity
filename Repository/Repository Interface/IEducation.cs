@@ -5,16 +5,16 @@ namespace Portfolio_API.Repository.Repository_Interface
 {
     public interface IEducation
     {
-        public IEnumerable<Education> GetDetails (int id);
+        public IEnumerable<Education> GetDetails (string id);
 
-        public void AddEducation (int id, IEnumerable<Education> about);
+        public void AddEducation (string id, IEnumerable<Education> about);
 
-        public void removeEducation (int id, int eduId);
+        public void removeEducation (string id, int eduId);
 
-        public void removeEducationRequest(int userId, int eduId);
+        public void removeEducationRequest(string userId, int eduId);
 
-        public void updateEducation (int id, int eduId, Education about);
+        public void updateEducation (string id, int eduId, Education about);
 
-        public void updateEducationRequest(int id, int eduId, Education about);
+        public void updateEducationRequest(string id, int eduId, Education about);
     }
 }
