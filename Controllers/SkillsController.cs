@@ -55,8 +55,8 @@ namespace Portfolio_API.Controllers
         [HttpPost]
         public ActionResult AddUserSkill([FromBody] IEnumerable<SkillsDto> userSkill)
         {
-            var userId = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
-            if (userId == 0)
+            var userId = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
+            if (userId == null)
             {
                 _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
                 return NotFound(_responseObject);
@@ -75,8 +75,8 @@ namespace Portfolio_API.Controllers
         [HttpPut("{skillId}")]
         public ActionResult UpdateUserSkill(int skillId, [FromBody] SkillsDto userSkill)
         {
-            var userId = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
-            if (userId == 0 )
+            var userId = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
+            if (userId == null )
             {
                 _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
                 return NotFound(_responseObject);
@@ -94,9 +94,9 @@ namespace Portfolio_API.Controllers
         [HttpDelete("{skillId}")]
         public IActionResult DeleteUserSkill(int skillId)
         {
-            var userId = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
+            var userId = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
 
-            if (userId == 0 )
+            if (userId == null )
             {
                 _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
                 return NotFound(_responseObject);

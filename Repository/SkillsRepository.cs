@@ -23,22 +23,25 @@ namespace Portfolio_API.Repository
 
             return user.UserProfile.Skills;
 		}
-		public void AddSkillsByUserID(int id, IEnumerable<Skills> skills)
+		public void AddSkillsByUserID(string id, IEnumerable<Skills> skills)
 		{
-			var users = _context.userProfiles.Include(x => x.Skills).FirstOrDefault(x => x.UserID.Equals(id));
+            //var user = _context.userProfiles.Include(x => x.UserID == id);
+           var users = _context.identityManuals.Include(x => x.UserProfile.Skills).FirstOrDefault(x => x.Id == id);
 			foreach (var item in skills)
 			{
-                users.Skills.Add(item);
+                users.UserProfile.Skills.Add(item);
             }
 			_context.SaveChanges();
 		}
 
-		public void updateSkillsByUserID(int id, int skillId, Skills skill)
+		public void updateSkillsByUserID(string id, int skillId, Skills skill)
 		{
-			var user = _context.userProfiles.Include(x => x.Skills).FirstOrDefault(x => x.UserID.Equals(id));
+            var user = _context.identityManuals.Include(x => x.UserProfile.Skills).FirstOrDefault(x => x.Id == id);
+
+           // var user = _context.userProfiles.Include(x => x.Skills).FirstOrDefault(x => x.UserID.Equals(id));
 			if (user != null)
 			{
-                var _Findskill = user.Skills[skillId];
+                var _Findskill = user.UserProfile.Skills[skillId];
 
 				if (_Findskill != null)
 				{
@@ -50,12 +53,12 @@ namespace Portfolio_API.Repository
 			}
 		}
 
-        public void updateSkillsRequest(int id, int skillId, Skills skill)
+        public void updateSkillsRequest(string id, int skillId, Skills skill)
         {
-            var user = _context.userProfiles.Include(x => x.Skills).FirstOrDefault(x => x.Id == id);
+            var user = _context.identityManuals.Include(x => x.UserProfile.Skills).FirstOrDefault(x => x.Id == id);
             if (user != null)
             {
-                var _Findskill = user.Skills.FirstOrDefault(x => x.Id == skillId);
+                var _Findskill = user.UserProfile.Skills.FirstOrDefault(x => x.Id == skillId);
 
                 if (_Findskill != null)
                 {
@@ -67,12 +70,14 @@ namespace Portfolio_API.Repository
             }
         }
 
-        public void removeSkillsByUserID(int id, int skillId)
+        public void removeSkillsByUserID(string id, int skillId)
 		{
-			var users = _context.userProfiles.Include(x => x.Skills).FirstOrDefault(x => x.UserID.Equals(id));
+            var users = _context.identityManuals.Include(x => x.UserProfile.Skills).FirstOrDefault(x => x.Id == id);
+
+            //var users = _context.userProfiles.Include(x => x.Skills).FirstOrDefault(x => x.UserID.Equals(id));
 			if (users != null)
 			{
-                var skill = users.Skills[skillId];
+                var skill = users.UserProfile.Skills[skillId];
                 if (skill != null)
                 {
                     _context.Remove(skill);
@@ -81,12 +86,12 @@ namespace Portfolio_API.Repository
             }
 		}
 
-        public void removeSkillsRequest(int id, int skillId)
+        public void removeSkillsRequest(string id, int skillId)
         {
-            var users = _context.userProfiles.Include(x => x.Skills).FirstOrDefault(x => x.Id == id);
+            var users = _context.identityManuals.Include(x => x.UserProfile.Skills).FirstOrDefault(x => x.Id == id);
             if (users != null)
             {
-                var skill = users.Skills.FirstOrDefault(x => x.Id == skillId);
+                var skill = users.UserProfile.Skills.FirstOrDefault(x => x.Id == skillId);
                 if (skill != null)
                 {
                     _context.Remove(skill);

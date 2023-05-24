@@ -7,14 +7,14 @@ namespace Portfolio_API.Repository.Repository_Interface
 	{
 		public IEnumerable<Skills> GetSkillsByUserID(string id);
 
-		public void AddSkillsByUserID(int id, IEnumerable<Skills> skills);
+		public void AddSkillsByUserID(string id, IEnumerable<Skills> skills);
 
-		public void updateSkillsByUserID (int id, int skillId, Skills skill);
+		public void updateSkillsByUserID (string id, int skillId, Skills skill);
 
-		public void updateSkillsRequest(int id, int skillId, Skills skill);
+		public void updateSkillsRequest(string id, int skillId, Skills skill);
 
-        public void removeSkillsByUserID(int id, int skillId);
+        public void removeSkillsByUserID(string id, int skillId);
 
-		public void removeSkillsRequest(int id, int skillId);
+		public void removeSkillsRequest(string id, int skillId);
     }
 }

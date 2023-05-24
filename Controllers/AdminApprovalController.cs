@@ -110,7 +110,7 @@ namespace Portfolio_API.Controllers
         }
 
         [HttpPut("skill/{skillId}")]
-        public IActionResult updateSkill(int userId, int skillId, AdminPostSkillDto edu)
+        public IActionResult updateSkill(string userId, int skillId, AdminPostSkillDto edu)
         {
             if (edu == null)
             {
@@ -128,7 +128,7 @@ namespace Portfolio_API.Controllers
         }
 
         [HttpDelete("skill/{skillId}")]
-        public IActionResult DeleteSkill(int userId, int skillId)
+        public IActionResult DeleteSkill(string userId, int skillId)
         {
             if (skillId == 0)
             {
