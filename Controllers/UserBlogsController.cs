@@ -63,6 +63,44 @@ namespace Portfolio_API.Controllers
         }
 
 
+
+        [AllowAnonymous]
+        [HttpGet("/api/userblogSearched/{tag}")]
+
+        public ActionResult<List<UserBlogsDto>> GetBlogwithKeyword(string tag)
+        {
+
+            var blogsFromDb = _userBlogsRepository.GetAboutWithkeyword(tag);
+            if (blogsFromDb == null)
+            {
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "No Blogs found in database");
+                return NotFound(_responseObject);
+            }
+
+            var approvedBlogs = blogsFromDb.Where(x => x.status != "pending").ToList();
+
+            UserBlogsDto[] userBlogsDto = new UserBlogsDto[approvedBlogs.Count];
+
+            for (int i = 0; i < approvedBlogs.Count; i++)
+            {
+                userBlogsDto[i] = new UserBlogsDto();
+                userBlogsDto[i].dateCreated = approvedBlogs[i].dateCreated;
+                userBlogsDto[i].title = approvedBlogs[i].title;
+                userBlogsDto[i].content = approvedBlogs[i].content;
+                userBlogsDto[i].tags = approvedBlogs[i].tags;
+                userBlogsDto[i].imageUrl = approvedBlogs[i].imageUrl;
+
+                userBlogsDto[i].ProfileUrl = approvedBlogs[i].user.About.ProfileUrl;
+                userBlogsDto[i].linkedin = approvedBlogs[i].user.About.Linkedin;
+                userBlogsDto[i].Github = approvedBlogs[i].user.About.Github;
+                userBlogsDto[i].Name = approvedBlogs[i].user.About.Name;
+                userBlogsDto[i].Email = approvedBlogs[i].user.About.Email;
+            }
+
+            _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull", userBlogsDto);
+            return Ok(_responseObject);
+        }
+
         [HttpGet]
         public ActionResult<List<UserBlogsDto>> GetUserBlogs()
         {

@@ -21,11 +21,23 @@ namespace Portfolio_API.Repository
             return allBlogs;
         }
 
+        public IEnumerable<UserBlogs> GetAboutWithkeyword(string tag)
+        {
+            var formattedTag = tag.Replace(" ", "").ToLower();
+            var allBlogs = _context.userBlogs
+                .Where(x => x.tags.Replace(" ", "").ToLower().Contains(formattedTag))
+                .Include(x => x.user.About)
+                .ToList();
+            return allBlogs;
+        }
+
         public IEnumerable<UserBlogs> GetAll()
         {
             var allBlogs = _context.userBlogs.Include(x => x.user.About).ToList();
             return allBlogs;
         }
+
+     
 
         public IEnumerable<About> GetAbout()
         {

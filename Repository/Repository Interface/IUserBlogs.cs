@@ -9,6 +9,9 @@ namespace Portfolio_API.Repository.Repository_Interface
         public IEnumerable<UserBlogs> GetAll();
         public IEnumerable<About> GetAbout();
 
+        public IEnumerable<UserBlogs> GetAboutWithkeyword(string tag);
+
+
 
 
         public void AddBlogs (int id, IEnumerable<UserBlogs> userBlogs);
