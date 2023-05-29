@@ -33,15 +33,15 @@ namespace Portfolio_API.Repository
             return About;
         }
 
-        public void AddBlogs(int id, IEnumerable<UserBlogs> userBlogs)
+        public void AddBlogs(int id, UserBlogs userBlogs)
         {
             var user = _context.user.Include(x => x.userBlogs).FirstOrDefault(x => x.Id == id);
             if (user != null)
             {
-                foreach (var item in userBlogs)
-                {
-                    user.userBlogs.Add(item);
-                }
+                //foreach (var item in userBlogs)
+                //{
+                    user.userBlogs.Add(userBlogs);
+                //}
                 _context.SaveChanges();
             }
         }

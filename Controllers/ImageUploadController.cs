@@ -16,34 +16,47 @@ namespace Portfolio_API.Controllers
             _webHost = webHost;
         }
 
-        [HttpPost]
-        public IActionResult UploadFile(IFormFile file)
+        [HttpPost, DisableRequestSizeLimit]
+        public async Task<IActionResult> Upload()
         {
-            string wwwrootpath = _webHost.WebRootPath;
-            if (file != null)
+            try
             {
+                var formCollection = await Request.ReadFormAsync();
+                var file = formCollection.Files.First();
+
+                string wwwrootpath = _webHost.WebRootPath;
                 string filename = Guid.NewGuid().ToString();
-                var Uploadpath = Path.Combine(wwwrootpath, @"images\");
+                var Uploadpath = Path.Combine(wwwrootpath, @"Images\");
                 var extension = Path.GetExtension(file.FileName);
 
-                //if (obj.Product.ImageUrl != null)
-                //{
-                //    var oldImagePath = Path.Combine(wwwrootpath, obj.Product.ImageUrl.TrimStart('\\'));
-                //    if (System.IO.File.Exists(oldImagePath))
-                //    {
-                //        System.IO.File.Delete(oldImagePath);
-                //    }
-                //}
+                if (file != null)
+                {
 
-                var fileStream = new FileStream(Path.Combine(Uploadpath, filename + extension), FileMode.Create);
+                    //if (obj.Product.ImageUrl != null)
+                    //{
+                    //    var oldImagePath = Path.Combine(wwwrootpath, obj.Product.ImageUrl.TrimStart('\\'));
+                    //    if (System.IO.File.Exists(oldImagePath))
+                    //    {
+                    //        System.IO.File.Delete(oldImagePath);
+                    //    }
+                    //}
 
-                file.CopyTo(fileStream);
+                    var fileStream = new FileStream(Path.Combine(Uploadpath, filename + extension), FileMode.Create);
 
-                return Ok(new { imageUrl = @"images\" + filename + extension });
+                    file.CopyTo(fileStream);
+
+                    var dbPath = Path.Combine(@"Images\" + filename + extension);
+
+                    return Ok(new { imageDbPath = dbPath});
+                }
+                else
+                {
+                    return BadRequest();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return BadRequest();
+                return StatusCode(500, $"Internal server error: {ex}");
             }
         }
     }
