@@ -9,10 +9,12 @@ namespace Portfolio_API.Repository
     public class UserBlogRepository : IUserBlogs
     {
         private readonly PorfolioContext _context;
+        private readonly IWebHostEnvironment _webHost;
 
-        public UserBlogRepository (PorfolioContext context)
+        public UserBlogRepository (PorfolioContext context, IWebHostEnvironment webHost)
         {
             _context = context;
+            _webHost = webHost;
         }
 
         public IEnumerable<UserBlogs> GetByUserId(int id)
@@ -36,8 +38,6 @@ namespace Portfolio_API.Repository
             var allBlogs = _context.userBlogs.Include(x => x.user.About).ToList();
             return allBlogs;
         }
-
-     
 
         public IEnumerable<About> GetAbout()
         {
@@ -92,6 +92,15 @@ namespace Portfolio_API.Repository
 
             if (user != null)
             {
+                if (user.userBlogs[blogsId].imageUrl != null)
+                {
+                    string wwwrootpath = _webHost.WebRootPath;
+                    var oldImagePath = Path.Combine(wwwrootpath, user.userBlogs[blogsId].imageUrl.TrimStart('\\'));
+                    if (System.IO.File.Exists(oldImagePath))
+                    {
+                        System.IO.File.Delete(oldImagePath);
+                    }
+                }
                 var blog = user.userBlogs[blogsId];
                 if (blog != null)
                 {
