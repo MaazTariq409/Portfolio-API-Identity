@@ -145,7 +145,7 @@ namespace Portfolio_API.Controllers
 
         //POST 
         [HttpPost]
-        public ActionResult AddUserBlog([FromBody] IEnumerable<UserBlogDto> userBlogs)
+        public ActionResult AddUserBlog([FromBody] UserBlogDto userBlogs)
         {
             var userId = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
             if (userId == 0)
@@ -154,7 +154,7 @@ namespace Portfolio_API.Controllers
                 return NotFound(_responseObject);
             }
 
-            var addBlog = _mapper.Map<IEnumerable<UserBlogs>>(userBlogs);
+            var addBlog = _mapper.Map<UserBlogs>(userBlogs);
 
             _userBlogsRepository.AddBlogs(userId, addBlog);
             _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "User Blog Added Succesfully");

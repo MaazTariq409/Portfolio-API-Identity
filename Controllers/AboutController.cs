@@ -49,6 +49,7 @@ namespace Portfolio_API.Controllers
         // POST api/<AboutController>
         [HttpPost]
         public ActionResult AddAboutDetails (AboutDto about)
+
         {
             var id = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
 

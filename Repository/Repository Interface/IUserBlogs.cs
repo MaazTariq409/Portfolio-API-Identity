@@ -14,7 +14,7 @@ namespace Portfolio_API.Repository.Repository_Interface
 
 
 
-        public void AddBlogs (int id, IEnumerable<UserBlogs> userBlogs);
+        public void AddBlogs (int id, UserBlogs userBlogs);
 
         public void removeBlogs (int id, int blogId);
 
