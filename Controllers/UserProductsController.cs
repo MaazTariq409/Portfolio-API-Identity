@@ -59,11 +59,11 @@ namespace Portfolio_API.Controllers
                 userProducts[i].Image = approvedProducts[i].Image;
                 userProducts[i].VideoUrl = approvedProducts[i].VideoUrl;
 
-                userProducts[i].ProfileUrl = approvedProducts[i].user.About.ProfileUrl;
-                userProducts[i].Name = approvedProducts[i].user.About.Name;
-                userProducts[i].Email = approvedProducts[i].user.About.Email;
-                userProducts[i].linkedin = approvedProducts[i].user.About.Linkedin;
-                userProducts[i].Github = approvedProducts[i].user.About.Github;
+                userProducts[i].ProfileUrl = approvedProducts[i].UserProfile.ProfileUrl;
+                userProducts[i].Name = approvedProducts[i].UserProfile.Name;
+                userProducts[i].Email = approvedProducts[i].UserProfile.Email;
+                userProducts[i].linkedin = approvedProducts[i].UserProfile.Linkedin;
+                userProducts[i].Github = approvedProducts[i].UserProfile.Github;
             }
 
             _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull", userProducts);
@@ -75,7 +75,7 @@ namespace Portfolio_API.Controllers
         [HttpGet]
         public ActionResult<List<UserProductsDto>> GetUserProducts()
         {
-            var userId = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
+            var userId = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
             if(userId == null)
             {
                 _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "User Not Found");
@@ -111,11 +111,11 @@ namespace Portfolio_API.Controllers
                 userProducts[i].Image = approvedProducts[i].Image;
                 userProducts[i].VideoUrl = approvedProducts[i].VideoUrl;
 
-                userProducts[i].ProfileUrl = approvedProducts[i].user.About.ProfileUrl;
-                userProducts[i].Name = approvedProducts[i].user.About.Name;
-                userProducts[i].Email = approvedProducts[i].user.About.Email;
-                userProducts[i].linkedin = approvedProducts[i].user.About.Linkedin;
-                userProducts[i].Github = approvedProducts[i].user.About.Github;
+                userProducts[i].ProfileUrl = approvedProducts[i].UserProfile.ProfileUrl;
+                userProducts[i].Name = approvedProducts[i].UserProfile.Name;
+                userProducts[i].Email = approvedProducts[i].UserProfile.Email;
+                userProducts[i].linkedin = approvedProducts[i].UserProfile.Linkedin;
+                userProducts[i].Github = approvedProducts[i].UserProfile.Github;
             }
 
             _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull", userProducts);
@@ -128,8 +128,8 @@ namespace Portfolio_API.Controllers
         [HttpPost]
         public ActionResult AddUserProduct([FromBody] ProductsDto userProducts)
         {
-            var userId = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
-            if (userId == 0)
+            var userId = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
+            if (userId == null)
             {
                 _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "User Not Found");
                 return NotFound(_responseObject);
@@ -148,8 +148,8 @@ namespace Portfolio_API.Controllers
         [HttpPut("{productsId}")]
         public ActionResult UpdateUserProducts(int productsId, [FromBody] ProductsDto userProducts)
         {
-            var userId = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
-            if (userId == 0)
+            var userId = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
+            if (userId == null)
             {
                 _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "User Not Found");
                 return NotFound(_responseObject);
@@ -168,9 +168,9 @@ namespace Portfolio_API.Controllers
         [HttpDelete("{productsId}")]
         public IActionResult DeleteUserProducts(int productsId)
         {
-            var userId = Int32.Parse(User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value);
+            var userId = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
 
-            if (userId == 0)
+            if (userId == null)
             {
                 _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "User Not Found");
                 return NotFound(_responseObject);

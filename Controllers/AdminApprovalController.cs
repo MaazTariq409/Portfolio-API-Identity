@@ -266,7 +266,7 @@ namespace Portfolio_API.Controllers
         }
 
         [HttpPut("product/{productId}")]
-        public IActionResult UpdateProduct(int userId, int productId, AdminProductPostDto products)
+        public IActionResult UpdateProduct(string userId, int productId, AdminProductPostDto products)
         {
             if (products == null)
             {
@@ -284,7 +284,7 @@ namespace Portfolio_API.Controllers
         }
 
         [HttpDelete("product/{productId}")]
-        public IActionResult DeleteProduct(int userId, int productId)
+        public IActionResult DeleteProduct(string userId, int productId)
         {
             if (productId == 0)
             {

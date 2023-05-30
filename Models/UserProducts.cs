@@ -26,9 +26,9 @@ namespace Portfolio_API.Models
         public string Status { get; set; }
 
 
-        [ForeignKey("UserID")]
+        [ForeignKey("UserProfileID")]
         [ValidateNever]
-        public User user { get; set; }
-        public int UserID { get; set; }
+        public UserProfile UserProfile { get; set; }
+        public int UserProfileID { get; set; }
     }
 }

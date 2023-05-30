@@ -6,13 +6,13 @@ namespace Portfolio_API.Repository.Repository_Interface
 	public interface IProducts
     {
 		public IEnumerable<UserProducts> GetProducts();
-		public IEnumerable<UserProducts> GetProductsByUserID(int id);
-		public void AddProductsByUserID(int id, UserProducts userProducts);
-		public void updateProductsByUserID(int id, int productId, UserProducts userProducts);
-		public void removeProductsByUserID(int id, int productId);
+		public IEnumerable<UserProducts> GetProductsByUserID(string id);
+		public void AddProductsByUserID(string id, UserProducts userProducts);
+		public void updateProductsByUserID(string id, int productId, UserProducts userProducts);
+		public void removeProductsByUserID(string id, int productId);
 
-        public void removeProductsRequest(int userId, int productId);
-        public void updateProductsRequest(int id, int productId, UserProducts userProducts);
+        public void removeProductsRequest(string userId, int productId);
+        public void updateProductsRequest(string id, int productId, UserProducts userProducts);
 
     }
 }

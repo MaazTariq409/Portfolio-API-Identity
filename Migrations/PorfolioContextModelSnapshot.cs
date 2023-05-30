@@ -468,6 +468,56 @@ namespace Portfolio_API.Migrations
                     b.ToTable("userInstitute");
                 });
 
+            modelBuilder.Entity("Portfolio_API.Models.UserProducts", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("DateCreated")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Image")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PermaLink")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserProfileID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("VideoUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserProfileID");
+
+                    b.ToTable("userProducts");
+                });
+
             modelBuilder.Entity("Portfolio_API.Models.UserProfile", b =>
                 {
                     b.Property<int>("Id")
@@ -669,6 +719,17 @@ namespace Portfolio_API.Migrations
                     b.Navigation("user");
                 });
 
+            modelBuilder.Entity("Portfolio_API.Models.UserProducts", b =>
+                {
+                    b.HasOne("Portfolio_API.Models.UserProfile", "UserProfile")
+                        .WithMany("UserProducts")
+                        .HasForeignKey("UserProfileID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("UserProfile");
+                });
+
             modelBuilder.Entity("Portfolio_API.Models.UserProfile", b =>
                 {
                     b.HasOne("Portfolio_API.Models.IdentityManual", "user")
@@ -706,6 +767,8 @@ namespace Portfolio_API.Migrations
                     b.Navigation("UserBlogs");
 
                     b.Navigation("UserExperiences");
+
+                    b.Navigation("UserProducts");
 
                     b.Navigation("UserProjects");
                 });

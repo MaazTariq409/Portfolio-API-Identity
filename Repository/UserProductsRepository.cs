@@ -13,37 +13,37 @@ namespace Portfolio_API.Repository
             _context = context;
         }
 
-        public void AddProductsByUserID(int id, UserProducts userProducts)
+        public void AddProductsByUserID(string id, UserProducts userProducts)
         {
-            var user = _context.user.Include(x => x.UserProducts).FirstOrDefault(x => x.Id == id);
+            var user = _context.identityManuals.Include(x => x.UserProfile).FirstOrDefault(x => x.Id == id);
 
             if (user != null)
             {
-                user.UserProducts.Add(userProducts);
+                user.UserProfile.UserProducts.Add(userProducts);
                 _context.SaveChanges();
             }
         }
 
         public IEnumerable<UserProducts> GetProducts()
         {
-            var allProducts = _context.userProducts.Include(x => x.user.About).ToList();
+            var allProducts = _context.userProducts.Include(x => x.UserProfile).ToList();
             return allProducts;
         }
 
-        public IEnumerable<UserProducts> GetProductsByUserID(int id)
+        public IEnumerable<UserProducts> GetProductsByUserID(string id)
         {
-            var allProducts = _context.userProducts.Where(x => x.Id == id).Include(x => x.user.About).ToList();
-            return allProducts;
+            var user = _context.identityManuals.Include(x => x.UserProfile.UserProducts).FirstOrDefault(x => x.Id == id);
+            return user.UserProfile.UserProducts;
         }
 
-        public void removeProductsByUserID(int id, int productId)
+        public void removeProductsByUserID(string id, int productId)
         {
 
-            var user = _context.user.Include(x => x.UserProducts).FirstOrDefault(y => y.Id == id);
+            var user = _context.identityManuals.Include(x => x.UserProfile.UserProducts).FirstOrDefault(x => x.Id == id);
 
-            if(user != null)
+            if (user != null)
             {
-                var product = user.UserProducts[productId];
+                var product = user.UserProfile.UserProducts[productId];
 
                 if(product != null)
                 {
@@ -53,13 +53,13 @@ namespace Portfolio_API.Repository
             }
         }
 
-        public void removeProductsRequest(int userId, int productId)
+        public void removeProductsRequest(string userId, int productId)
         {
-            var user = _context.user.Include(x => x.UserProducts).FirstOrDefault(y => y.Id == userId);
+            var user = _context.identityManuals.Include(x => x.UserProfile.UserProducts).FirstOrDefault(x => x.Id == userId);
 
             if (user != null)
             {
-                var product = user.UserProducts.FirstOrDefault(x => x.Id == productId);
+                var product = user.UserProfile.UserProducts.FirstOrDefault(x => x.Id == productId);
 
                 if (product != null)
                 {
@@ -69,13 +69,13 @@ namespace Portfolio_API.Repository
             }
         }
 
-        public void updateProductsByUserID(int id, int productId, UserProducts userProducts)
+        public void updateProductsByUserID(string id, int productId, UserProducts userProducts)
         {
-            var user = _context.user.Include(x => x.UserProducts).FirstOrDefault(y => y.Id == id);
+            var user = _context.identityManuals.Include(x => x.UserProfile.UserProducts).FirstOrDefault(y => y.Id == id);
 
             if (user != null)
             {
-                var product = user.UserProducts[productId];
+                var product = user.UserProfile.UserProducts[productId];
 
                 if (product != null)
                 {
@@ -94,13 +94,13 @@ namespace Portfolio_API.Repository
 
         }
 
-        public void updateProductsRequest(int id, int productId, UserProducts userProducts)
+        public void updateProductsRequest(string id, int productId, UserProducts userProducts)
         {
-            var user = _context.user.Include(x => x.UserProducts).FirstOrDefault(y => y.Id == id);
+            var user = _context.identityManuals.Include(x => x.UserProfile.UserProducts).FirstOrDefault(y => y.Id == id);
 
             if (user != null)
             {
-                var product = user.UserProducts.FirstOrDefault(x => x.Id == productId);
+                var product = user.UserProfile.UserProducts.FirstOrDefault(x => x.Id == productId);
 
                 if (product != null)
                 {
