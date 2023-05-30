@@ -16,7 +16,7 @@ namespace Portfolio_API.Controllers
             _webHost = webHost;
         }
 
-        [HttpPost, DisableRequestSizeLimit]
+        [HttpPost]
         public async Task<IActionResult> Upload()
         {
             try

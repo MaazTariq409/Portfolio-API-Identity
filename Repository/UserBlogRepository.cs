@@ -11,7 +11,7 @@ namespace Portfolio_API.Repository
         private readonly PorfolioContext _context;
         private readonly IWebHostEnvironment _webHost;
 
-        public UserBlogRepository (PorfolioContext context, IWebHostEnvironment webHost)
+        public UserBlogRepository(PorfolioContext context, IWebHostEnvironment webHost)
         {
             _context = context;
             _webHost = webHost;
@@ -55,7 +55,7 @@ namespace Portfolio_API.Repository
 
                 //foreach (var item in userBlogs)
                 //{
-                    user.UserProfile.UserBlogs.Add(userBlogs);
+                user.UserProfile.UserBlogs.Add(userBlogs);
                 //}
                 _context.SaveChanges();
             }
@@ -102,10 +102,27 @@ namespace Portfolio_API.Repository
                 //    var oldImagePath = Path.Combine(wwwrootpath, user.UserProfile.UserBlogs[blogsId].imageUrl.TrimStart('\\'));
                 //    if (System.IO.File.Exists(oldImagePath))
                 //    {
-                //        System.IO.File.Delete(oldImagePath);
+                //        int retryCount = 1; // Number of retries
+                //        int retryDelay = 500; // Delay between retries in milliseconds
+
+                //        for (int i = 0; i < retryCount; i++)
+                //        {
+                //            try
+                //            {
+                //                System.IO.File.Delete(oldImagePath);
+                //                break; // Exit the loop if deletion is successful
+                //            }
+                //            catch (System.IO.IOException)
+                //            {
+                //                // File is locked, wait for a short delay and then retry
+                //                Thread.Sleep(retryDelay);
+                //            }
+                //        }
                 //    }
                 //}
-                var blog = user.UserProfile.UserBlogs[blogsId];
+                var blog1 = user.UserProfile.UserBlogs.Where(x => x.status == "approved").ToList();
+                var blog = blog1[blogsId];
+            
                 if (blog != null)
                 {
                     blog.title = userBlogs.title;
@@ -115,10 +132,11 @@ namespace Portfolio_API.Repository
                     blog.tags = userBlogs.tags;
                     blog.status = "pending";
 
-                 //   blog = userBlogs;
+                    //   blog = userBlogs;
 
                     _context.SaveChanges();
                 }
+
             }
         }
 
