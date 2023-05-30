@@ -9,7 +9,5 @@ namespace Portfolio_API.DTOs
         public string tags { get; set; }
         public string imageUrl { get; set; }
         public string dateCreated { get; set; }
-
-     
     }
 }

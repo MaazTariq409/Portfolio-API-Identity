@@ -9,16 +9,28 @@ namespace Portfolio_API.Repository
     public class UserBlogRepository : IUserBlogs
     {
         private readonly PorfolioContext _context;
+        private readonly IWebHostEnvironment _webHost;
 
-        public UserBlogRepository (PorfolioContext context)
+        public UserBlogRepository (PorfolioContext context, IWebHostEnvironment webHost)
         {
             _context = context;
+            _webHost = webHost;
         }
 
         public IEnumerable<UserBlogs> GetByUserId(string id)
         {
             var user = _context.identityManuals.Include(x => x.UserProfile.UserBlogs).FirstOrDefault(x => x.Id == id);
             return user.UserProfile.UserBlogs;
+        }
+
+        public IEnumerable<UserBlogs> GetAboutWithkeyword(string tag)
+        {
+            var formattedTag = tag.Replace(" ", "").ToLower();
+            var allBlogs = _context.userBlogs
+                .Where(x => x.tags.Replace(" ", "").ToLower().Contains(formattedTag))
+                .Include(x => x.user.About)
+                .ToList();
+            return allBlogs;
         }
 
         public IEnumerable<UserBlogs> GetAll()
@@ -33,16 +45,18 @@ namespace Portfolio_API.Repository
             return About;
         }
 
-        public void AddBlogs(string id, IEnumerable<UserBlogs> userBlogs)
+
+        public void AddBlogs(int id, UserBlogs userBlogs)
         {
             var user = _context.identityManuals.Include(x => x.UserProfile.UserBlogs).FirstOrDefault(x => x.Id == id);
 
             if (user != null)
             {
-                foreach (var item in userBlogs)
-                {
-                    user.UserProfile.UserBlogs.Add(item);
-                }
+
+                //foreach (var item in userBlogs)
+                //{
+                    user.userBlogs.Add(userBlogs);
+                //}
                 _context.SaveChanges();
             }
         }
@@ -81,7 +95,17 @@ namespace Portfolio_API.Repository
 
             if (user != null)
             {
-                var blog = user.UserProfile.UserBlogs[blogsId];
+
+                if (user.userBlogs[blogsId].imageUrl != null)
+                {
+                    string wwwrootpath = _webHost.WebRootPath;
+                    var oldImagePath = Path.Combine(wwwrootpath, user.userBlogs[blogsId].imageUrl.TrimStart('\\'));
+                    if (System.IO.File.Exists(oldImagePath))
+                    {
+                        System.IO.File.Delete(oldImagePath);
+                    }
+                }
+                var blog = user.userBlogs[blogsId];
                 if (blog != null)
                 {
                     blog.title = userBlogs.title;
