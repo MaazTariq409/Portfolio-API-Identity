@@ -19,14 +19,16 @@ namespace Portfolio_API.Controllers
         private readonly IEducation _education;
         private readonly IUserExperience _experience;
         private readonly ISkills _skill;
+        private readonly IProducts _product;
         private readonly IUserBlogs _userBlogs;
         private readonly IMapper _mapper;
 
-        public AdminApprovalController(IEducation education, IUserExperience experience, ISkills skill, IUserBlogs userBlogs, IMapper mapper)
+        public AdminApprovalController(IEducation education,IProducts product, IUserExperience experience, ISkills skill, IUserBlogs userBlogs, IMapper mapper)
         {
             _education = education;
             _experience = experience;
             _skill = skill;
+            _product = product;
             _userBlogs = userBlogs;
             _mapper = mapper;
         }
@@ -259,6 +261,40 @@ namespace Portfolio_API.Controllers
             _userBlogs.removeBlogsRequest(userId, articalId);
 
             _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull");
+
+            return Ok(_responseObject);
+        }
+
+        [HttpPut("product/{productId}")]
+        public IActionResult UpdateProduct(string userId, int productId, AdminProductPostDto products)
+        {
+            if (products == null)
+            {
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
+                return NotFound(_responseObject);
+            }
+
+            var ProductsToUpdate = _mapper.Map<UserProducts>(products);
+
+            _product.updateProductsRequest(userId, productId, ProductsToUpdate);
+
+            _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Product Updated Successfully");
+
+            return Ok(_responseObject);
+        }
+
+        [HttpDelete("product/{productId}")]
+        public IActionResult DeleteProduct(string userId, int productId)
+        {
+            if (productId == 0)
+            {
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
+                return NotFound(_responseObject);
+            }
+
+            _product.removeProductsRequest(userId, productId);
+
+            _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Product Deleted Successfully");
 
             return Ok(_responseObject);
         }
