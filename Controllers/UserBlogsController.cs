@@ -90,11 +90,11 @@ namespace Portfolio_API.Controllers
                 userBlogsDto[i].tags = approvedBlogs[i].tags;
                 userBlogsDto[i].imageUrl = approvedBlogs[i].imageUrl;
 
-                userBlogsDto[i].ProfileUrl = approvedBlogs[i].user.About.ProfileUrl;
-                userBlogsDto[i].linkedin = approvedBlogs[i].user.About.Linkedin;
-                userBlogsDto[i].Github = approvedBlogs[i].user.About.Github;
-                userBlogsDto[i].Name = approvedBlogs[i].user.About.Name;
-                userBlogsDto[i].Email = approvedBlogs[i].user.About.Email;
+                userBlogsDto[i].ProfileUrl = approvedBlogs[i].UserProfile.ProfileUrl;
+                userBlogsDto[i].linkedin = approvedBlogs[i].UserProfile.Linkedin;
+                userBlogsDto[i].Github = approvedBlogs[i].UserProfile.Github;
+                userBlogsDto[i].Name = approvedBlogs[i].UserProfile.Name;
+                userBlogsDto[i].Email = approvedBlogs[i].UserProfile.Email;
             }
 
             _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull", userBlogsDto);

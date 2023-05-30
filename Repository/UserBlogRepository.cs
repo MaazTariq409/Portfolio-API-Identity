@@ -28,7 +28,7 @@ namespace Portfolio_API.Repository
             var formattedTag = tag.Replace(" ", "").ToLower();
             var allBlogs = _context.userBlogs
                 .Where(x => x.tags.Replace(" ", "").ToLower().Contains(formattedTag))
-                .Include(x => x.user.About)
+                .Include(x => x.UserProfile)
                 .ToList();
             return allBlogs;
         }
@@ -46,7 +46,7 @@ namespace Portfolio_API.Repository
         }
 
 
-        public void AddBlogs(int id, UserBlogs userBlogs)
+        public void AddBlogs(string id, UserBlogs userBlogs)
         {
             var user = _context.identityManuals.Include(x => x.UserProfile.UserBlogs).FirstOrDefault(x => x.Id == id);
 
@@ -55,7 +55,7 @@ namespace Portfolio_API.Repository
 
                 //foreach (var item in userBlogs)
                 //{
-                    user.userBlogs.Add(userBlogs);
+                    user.UserProfile.UserBlogs.Add(userBlogs);
                 //}
                 _context.SaveChanges();
             }
@@ -96,16 +96,16 @@ namespace Portfolio_API.Repository
             if (user != null)
             {
 
-                if (user.userBlogs[blogsId].imageUrl != null)
-                {
-                    string wwwrootpath = _webHost.WebRootPath;
-                    var oldImagePath = Path.Combine(wwwrootpath, user.userBlogs[blogsId].imageUrl.TrimStart('\\'));
-                    if (System.IO.File.Exists(oldImagePath))
-                    {
-                        System.IO.File.Delete(oldImagePath);
-                    }
-                }
-                var blog = user.userBlogs[blogsId];
+                //if (user.UserProfile.UserBlogs[blogsId].imageUrl != null)
+                //{
+                //    string wwwrootpath = _webHost.WebRootPath;
+                //    var oldImagePath = Path.Combine(wwwrootpath, user.UserProfile.UserBlogs[blogsId].imageUrl.TrimStart('\\'));
+                //    if (System.IO.File.Exists(oldImagePath))
+                //    {
+                //        System.IO.File.Delete(oldImagePath);
+                //    }
+                //}
+                var blog = user.UserProfile.UserBlogs[blogsId];
                 if (blog != null)
                 {
                     blog.title = userBlogs.title;

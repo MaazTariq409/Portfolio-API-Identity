@@ -11,7 +11,7 @@ namespace Portfolio_API.Repository.Repository_Interface
 
         public IEnumerable<UserBlogs> GetAboutWithkeyword(string tag);
 
-        public void AddBlogs (int id, UserBlogs userBlogs);
+        public void AddBlogs (string id, UserBlogs userBlogs);
 
 
         public void removeBlogs (string id, int blogId);
