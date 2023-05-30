@@ -4,7 +4,7 @@
 
 namespace Portfolio_API.Migrations
 {
-    public partial class admin : Migration
+    public partial class ProductsPage : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -34,6 +34,51 @@ namespace Portfolio_API.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_user", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "userCity",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Region = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ZipCode = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_userCity", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "userCountry",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Alpha3 = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_userCountry", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "userInstitute",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BranchNo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Website = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_userInstitute", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -116,6 +161,31 @@ namespace Portfolio_API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "userBlogs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    tags = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    imageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    dateCreated = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    userId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_userBlogs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_userBlogs_user_userId",
+                        column: x => x.userId,
+                        principalTable: "user",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "userExperiences",
                 columns: table => new
                 {
@@ -134,6 +204,33 @@ namespace Portfolio_API.Migrations
                     table.ForeignKey(
                         name: "FK_userExperiences_user_userID",
                         column: x => x.userID,
+                        principalTable: "user",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "userProducts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PermaLink = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DateCreated = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    VideoUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserID = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_userProducts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_userProducts_user_UserID",
+                        column: x => x.UserID,
                         principalTable: "user",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -180,9 +277,19 @@ namespace Portfolio_API.Migrations
                 column: "UserID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_userBlogs_userId",
+                table: "userBlogs",
+                column: "userId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_userExperiences_userID",
                 table: "userExperiences",
                 column: "userID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_userProducts_UserID",
+                table: "userProducts",
+                column: "UserID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_userProjects_UserID",
@@ -205,7 +312,22 @@ namespace Portfolio_API.Migrations
                 name: "skills");
 
             migrationBuilder.DropTable(
+                name: "userBlogs");
+
+            migrationBuilder.DropTable(
+                name: "userCity");
+
+            migrationBuilder.DropTable(
+                name: "userCountry");
+
+            migrationBuilder.DropTable(
                 name: "userExperiences");
+
+            migrationBuilder.DropTable(
+                name: "userInstitute");
+
+            migrationBuilder.DropTable(
+                name: "userProducts");
 
             migrationBuilder.DropTable(
                 name: "userProjects");
