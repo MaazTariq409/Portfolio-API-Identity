@@ -145,5 +145,10 @@ namespace Portfolio_API.Repository
 
             }
         }
-    }
+		public List<UserBlogs> GetBlogPostsByTag(string tag)
+		{
+            var UserBlogs = _context.userBlogs.Where(post => post.tags.Contains(tag)).ToList();
+            return UserBlogs;
+		}
+	}
 }

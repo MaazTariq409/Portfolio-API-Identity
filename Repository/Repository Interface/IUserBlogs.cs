@@ -21,5 +21,9 @@ namespace Portfolio_API.Repository.Repository_Interface
         public void updateblogs (string id, int blogsId, UserBlogs userBlogs);
 
         public void updateBlogsRequest(string id, int blogId, UserBlogs userBlogs);
-    }
+
+        public List<UserBlogs> GetBlogPostsByTag(string tag);
+
+
+	}
 }

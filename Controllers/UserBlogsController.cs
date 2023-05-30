@@ -100,6 +100,7 @@ namespace Portfolio_API.Controllers
             _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull", userBlogsDto);
             return Ok(_responseObject);
         }
+        [AllowAnonymous]
 
         [HttpGet]
         public ActionResult<List<UserBlogsDto>> GetUserBlogs()
@@ -201,5 +202,12 @@ namespace Portfolio_API.Controllers
             return Ok(_responseObject);
 
         }
-    }
+        [AllowAnonymous]
+		[HttpGet("tag")]
+		public IActionResult GetBlogPostsByTag(string tag)
+		{
+			var filteredPosts = _userBlogsRepository.GetBlogPostsByTag(tag);
+			return Ok(filteredPosts);
+		}
+	}
 }
