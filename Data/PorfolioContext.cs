@@ -28,7 +28,7 @@ namespace Portfolio_API.Data
         public DbSet<UserCity> userCity { get; set; }
         public DbSet<UserCountry> userCountry { get; set; }
         public DbSet<UserInstitute> userInstitute { get; set; }
-        public DbSet<UserProducts> userProducts { get; set; }
+
         public DbSet<UserBlogs> userBlogs { get; set; }
 
 
