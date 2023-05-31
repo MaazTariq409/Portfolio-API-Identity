@@ -32,6 +32,13 @@ namespace Portfolio_API.MapperProfiles
             CreateMap<UserBlogs, AdminBlogPostDto>();
             CreateMap<AdminBlogPostDto, UserBlogs>();
 
+            CreateMap<AdminProductGetDto, UserProducts>();
+            CreateMap<UserProducts, AdminProductGetDto>();
+            CreateMap<UserProducts, AdminProductPostDto>();
+            CreateMap<AdminProductPostDto, UserProducts>();
+            CreateMap<UserProducts, AdminProductDto>();
+            CreateMap<AdminProductDto, UserProducts>();
+
         }
     }
 }

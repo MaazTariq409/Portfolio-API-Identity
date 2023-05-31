@@ -39,7 +39,7 @@ namespace Portfolio_API.Controllers
 
             var approvedProducts = productsFromDb.Where(x => x.Status != "pending").ToList();
 
-            if(approvedProducts == null)
+            if(approvedProducts.Count() == 0)
             {
                 _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Products are waiting for Approval");
                 return NotFound(_responseObject);
@@ -91,7 +91,7 @@ namespace Portfolio_API.Controllers
 
             var approvedProducts = productsFromDb.Where(x => x.Status != "pending").ToList();
 
-            if (approvedProducts == null)
+            if (approvedProducts.Count() == 0)
             {
                 _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Products are waiting for Approval");
                 return NotFound(_responseObject);
@@ -158,7 +158,7 @@ namespace Portfolio_API.Controllers
             var updateUserProducts = _mapper.Map<UserProducts>(userProducts);
 
             _userProductsRepository.updateProductsByUserID(userId, productsId, updateUserProducts);
-            _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "User Product Updated succesfully");
+            _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "User Updated Updated succesfully");
 
             return Ok(_responseObject);
 

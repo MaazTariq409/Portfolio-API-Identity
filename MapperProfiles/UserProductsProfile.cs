@@ -14,7 +14,6 @@ namespace Portfolio_API.MapperProfiles
 			CreateMap<UserProducts, UserProductsDto>();
             CreateMap<ProductsDto, UserProducts>();
             CreateMap<UserProducts, ProductsDto>();
-
         }
 	}
 

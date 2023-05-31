@@ -265,6 +265,25 @@ namespace Portfolio_API.Controllers
             return Ok(_responseObject);
         }
 
+        [HttpGet("getproducts")]
+        public ActionResult<List<AdminGetExperienceDto>> GetUserProducts(string userId)
+        {
+            if (userId == null)
+            {
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "No Product found associated with current user");
+                return NotFound(_responseObject);
+            }
+
+            var userProductsFromDb = _product.GetProductsByUserID(userId);
+
+            //var experienceDto = _mapper.Map<List<AdminGetExperienceDto>>(experienceFromDB);
+
+            //_responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull", experienceFromDB);
+
+            return Ok(userProductsFromDb);
+
+        }
+
         [HttpPut("product/{productId}")]
         public IActionResult UpdateProduct(string userId, int productId, AdminProductPostDto products)
         {
