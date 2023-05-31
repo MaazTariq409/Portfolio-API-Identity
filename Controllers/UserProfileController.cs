@@ -122,5 +122,14 @@ namespace Portfolio_API.Controllers
             var users = _userProfileRepository.getUsers();
             return Ok(users);
         }
+
+        [HttpGet("/api/users/pending")]
+        public ActionResult<IEnumerable<UserProfile>> GetUsersPendingRequest()
+        {
+            var id = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
+
+            var users = _userProfileRepository.getUserPendingRequests(id);
+            return Ok(users);
+        }
     }
 }
