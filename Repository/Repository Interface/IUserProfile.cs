@@ -16,5 +16,7 @@ namespace Portfolio_API.Repository.Repository_Interface
         public bool checkAbout (string id);
 
         public IEnumerable<IdentityManual> getUsers();
+
+        public IdentityManual getUserPendingRequests(string id);
     }
 }

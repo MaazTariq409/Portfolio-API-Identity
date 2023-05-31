@@ -33,7 +33,7 @@ namespace Portfolio_API.Controllers
             _mapper = mapper;
         }
 
-
+        // Education Approval Endpoints
 
         // GET: api/<EducationController>
         [HttpGet("geteducation")]
@@ -53,9 +53,6 @@ namespace Portfolio_API.Controllers
 
             return Ok(educationDetails);
         }
-
-
-        // Education Approval Endpoints
 
         [HttpPut("education/{eduId}")]
         public IActionResult updateEducation(string userId, int eduId, AdminPostEducationDto edu)

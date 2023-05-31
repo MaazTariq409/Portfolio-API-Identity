@@ -90,5 +90,17 @@ namespace Portfolio_API.Repository
             .Include(about => about.UserProfile).ToList();
             return users;
         }
+
+        public IdentityManual getUserPendingRequests(string id)
+        {
+            var users = _context.identityManuals
+            .Include(about => about.UserProfile.UserExperiences)
+            .Include(about => about.UserProfile.Skills)
+            .Include(about => about.UserProfile.Education)
+            .Include(about => about.UserProfile.UserExperiences)
+            .Include(about => about.UserProfile.UserBlogs)
+            .FirstOrDefault(x =>x.Id == id);
+            return users;
+        }
     }
 }
