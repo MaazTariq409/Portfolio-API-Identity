@@ -23,7 +23,7 @@ namespace Portfolio_API.Models
         [Required]
         public string VideoUrl { get; set; }
         [Required]
-        public string Status { get; set; }
+        public string Status { get; set; } = "pending";
 
 
         [ForeignKey("UserProfileID")]

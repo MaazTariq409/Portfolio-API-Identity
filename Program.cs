@@ -36,6 +36,8 @@ namespace Portfolio_API
             builder.Services.AddTransient<ICountry, CountryRepository>();
             builder.Services.AddTransient<IUserBlogs, UserBlogRepository>();
             builder.Services.AddTransient<IProducts, UserProductsRepository>();
+            builder.Services.AddScoped<IProductType, ProductTypeRepository>();
+
 
 
             builder.Services.AddTransient<TokenGeneration>();

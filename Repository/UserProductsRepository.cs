@@ -15,7 +15,7 @@ namespace Portfolio_API.Repository
 
         public void AddProductsByUserID(string id, UserProducts userProducts)
         {
-            var user = _context.identityManuals.Include(x => x.UserProfile).FirstOrDefault(x => x.Id == id);
+            var user = _context.identityManuals.Include(x => x.UserProfile.UserProducts).FirstOrDefault(x => x.Id == id);
 
             if (user != null)
             {

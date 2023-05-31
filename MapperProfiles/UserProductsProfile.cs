@@ -12,7 +12,10 @@ namespace Portfolio_API.MapperProfiles
 			//CreateMap<UserDto, User>();
 			CreateMap<UserProductsDto, UserProducts>();
 			CreateMap<UserProducts, UserProductsDto>();
-		}
+            CreateMap<ProductsDto, UserProducts>();
+            CreateMap<UserProducts, ProductsDto>();
+
+        }
 	}
 
 }
