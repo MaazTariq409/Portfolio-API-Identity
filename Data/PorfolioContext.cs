@@ -31,7 +31,8 @@ namespace Portfolio_API.Data
         public DbSet<UserProducts> userProducts { get; set; }
         public DbSet<UserBlogs> userBlogs { get; set; }
         public DbSet<UserProductType> productTypes { get; set; }
-
+        public DbSet<UserServices> userServices { get; set; }
+        public DbSet<UserServiceGig> userServiceGigs { get; set; }
 
 
 
