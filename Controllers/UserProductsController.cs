@@ -73,6 +73,7 @@ namespace Portfolio_API.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public ActionResult<List<UserProductsDto>> GetUserProducts()
         {
             var userId = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;

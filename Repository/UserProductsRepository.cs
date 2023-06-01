@@ -43,7 +43,8 @@ namespace Portfolio_API.Repository
 
             if (user != null)
             {
-                var product = user.UserProfile.UserProducts[productId];
+                var approvedProducts = user.UserProfile.UserProducts.Where(x => x.Status == "approved").ToList();
+                var product = approvedProducts[productId];
 
                 if(product != null)
                 {
@@ -75,7 +76,8 @@ namespace Portfolio_API.Repository
 
             if (user != null)
             {
-                var product = user.UserProfile.UserProducts[productId];
+                var approvedProducts = user.UserProfile.UserProducts.Where(x => x.Status == "approved").ToList();
+                var product = approvedProducts[productId];
 
                 if (product != null)
                 {

@@ -66,7 +66,8 @@ namespace Portfolio_API.Repository
             var users = _context.identityManuals.Include(x => x.UserProfile.UserBlogs).FirstOrDefault(x => x.Id == id);
             if (users != null)
             {
-                var blogs = users.UserProfile.UserBlogs[blogId];
+                var approvedBlogs = users.UserProfile.UserBlogs.Where(x => x.status == "approved").ToList();
+                var blogs = approvedBlogs[blogId];
                 if (blogs != null)
                 {
                     _context.Remove(blogs);
@@ -120,8 +121,8 @@ namespace Portfolio_API.Repository
                 //        }
                 //    }
                 //}
-                var blog1 = user.UserProfile.UserBlogs.Where(x => x.status == "approved").ToList();
-                var blog = blog1[blogsId];
+                var approvedBlogs = user.UserProfile.UserBlogs.Where(x => x.status == "approved").ToList();
+                var blog = approvedBlogs[blogsId];
             
                 if (blog != null)
                 {
