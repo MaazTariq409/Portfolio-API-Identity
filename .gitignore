@@ -501,3 +501,4 @@ bin/Debug/net6.0/Portfolio API.exe
 bin/Debug/net6.0/appsettings.json
 obj/Debug/net6.0/Portfolio API.GeneratedMSBuildEditorConfig.editorconfig
 bin/Debug/net6.0/appsettings.json
+Migrations/20230522063228_identityUserProfile.Designer.cs
