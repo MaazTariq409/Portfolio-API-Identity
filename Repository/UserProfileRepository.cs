@@ -98,6 +98,7 @@ namespace Portfolio_API.Repository
             .Include(skill => skill.UserProfile.Skills)
             .Include(edu => edu.UserProfile.Education)
             .Include(blog => blog.UserProfile.UserBlogs)
+            .Include(prod => prod.UserProfile.UserProducts)
             .Include(service => service.UserProfile.UserServiceGigs)
             .FirstOrDefault(x =>x.Id == id);
             return users;
