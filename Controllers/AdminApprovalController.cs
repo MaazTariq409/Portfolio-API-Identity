@@ -22,8 +22,11 @@ namespace Portfolio_API.Controllers
         private readonly IProducts _product;
         private readonly IUserBlogs _userBlogs;
         private readonly IMapper _mapper;
+        private readonly IUserServiceGig _service;
 
-        public AdminApprovalController(IEducation education,IProducts product, IUserExperience experience, ISkills skill, IUserBlogs userBlogs, IMapper mapper)
+        public AdminApprovalController(IEducation education,IProducts product, 
+            IUserExperience experience, ISkills skill, 
+            IUserBlogs userBlogs, IMapper mapper, IUserServiceGig serviceGig)
         {
             _education = education;
             _experience = experience;
@@ -31,6 +34,7 @@ namespace Portfolio_API.Controllers
             _product = product;
             _userBlogs = userBlogs;
             _mapper = mapper;
+            _service = serviceGig;
         }
 
         // Education Approval Endpoints
@@ -262,6 +266,8 @@ namespace Portfolio_API.Controllers
             return Ok(_responseObject);
         }
 
+        // Product APIs
+
         [HttpGet("getproducts")]
         public ActionResult<List<AdminGetExperienceDto>> GetUserProducts(string userId)
         {
@@ -309,6 +315,61 @@ namespace Portfolio_API.Controllers
             }
 
             _product.removeProductsRequest(userId, productId);
+
+            _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Product Deleted Successfully");
+
+            return Ok(_responseObject);
+        }
+
+        // Service APIs
+
+        [HttpGet("getservices")]
+        public ActionResult<List<AdminGetExperienceDto>> GetUserService(string userId)
+        {
+            if (userId == null)
+            {
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "No Product found associated with current user");
+                return NotFound(_responseObject);
+            }
+
+            var userProductsFromDb = _service.GetServiceGigByUserId(userId);
+
+            //var experienceDto = _mapper.Map<List<AdminGetExperienceDto>>(experienceFromDB);
+
+            //_responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull", experienceFromDB);
+
+            return Ok(userProductsFromDb);
+
+        }
+
+        [HttpPut("service/{serviceId}")]
+        public IActionResult UpdateService(string userId, int serviceId, AdminUserServiceGigPostDto service)
+        {
+            if (service == null)
+            {
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
+                return NotFound(_responseObject);
+            }
+
+            var ProductsToUpdate = _mapper.Map<UserServiceGig>(service);
+
+            _service.updateServiceGigRequest(userId, serviceId, ProductsToUpdate);
+
+            _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Product Updated Successfully");
+
+            return Ok(_responseObject);
+        }
+
+        [HttpDelete("service/{serviceId}")]
+        public IActionResult DeleteService(string userId, int serviceId)
+        {
+            if (serviceId == 0)
+            {
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
+                return NotFound(_responseObject);
+            }
+
+            _service.removeServiceGigRequest(userId, serviceId);
 
             _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Product Deleted Successfully");
 

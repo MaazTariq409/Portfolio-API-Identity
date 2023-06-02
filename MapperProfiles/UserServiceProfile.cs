@@ -13,11 +13,15 @@ namespace Portfolio_API.MapperProfiles
             CreateMap<UserServiceGigDto, UserServiceGig>();
 
             CreateMap<UserServices, AdminUserServiceGetDto>();
+            CreateMap<AdminUserServiceGetDto, UserServices>();
             CreateMap<AdminUserServicePostDto, UserServices>();
+            CreateMap<AdminUserServicePostDto, UserServiceGig>();
+            CreateMap<UserServiceGig, AdminUserServicePostDto>();
             CreateMap<UserServiceGigPostDto, UserServiceGig>();
 
 
-
+            CreateMap<UserServiceGig, AdminUserServiceGigPostDto>();
+            CreateMap<AdminUserServiceGigPostDto, UserServiceGig>();
         }
 
     }

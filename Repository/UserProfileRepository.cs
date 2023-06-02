@@ -94,11 +94,11 @@ namespace Portfolio_API.Repository
         public IdentityManual getUserPendingRequests(string id)
         {
             var users = _context.identityManuals
-            .Include(about => about.UserProfile.UserExperiences)
-            .Include(about => about.UserProfile.Skills)
-            .Include(about => about.UserProfile.Education)
-            .Include(about => about.UserProfile.UserExperiences)
-            .Include(about => about.UserProfile.UserBlogs)
+            .Include(exp => exp.UserProfile.UserExperiences)
+            .Include(skill => skill.UserProfile.Skills)
+            .Include(edu => edu.UserProfile.Education)
+            .Include(blog => blog.UserProfile.UserBlogs)
+            .Include(service => service.UserProfile.UserServiceGigs)
             .FirstOrDefault(x =>x.Id == id);
             return users;
         }

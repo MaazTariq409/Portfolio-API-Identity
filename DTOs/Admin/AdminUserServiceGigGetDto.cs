@@ -1,11 +1,12 @@
-﻿using Portfolio_API.Models;
-using System.ComponentModel.DataAnnotations;
-using System.Xml.Linq;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace Portfolio_API.DTOs
+namespace Portfolio_API.DTOs.Admin
 {
-    public class UserServiceGigPostDto
+    public class AdminUserServiceGigGetDto
     {
+        [Key]
+        public int Id { get; set; }
+
         [Required]
         public string Title { get; set; }
 
@@ -17,9 +18,11 @@ namespace Portfolio_API.DTOs
 
         [Required]
         public string DateCreated { get; set; }
-       
+
         [Required]
         public string Price { get; set; }
 
+        [Required]
+        public string Status { get; set; }
     }
 }
