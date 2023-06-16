@@ -17,103 +17,150 @@ namespace Portfolio_API.Controllers
         private readonly IUserProfile _userProfileRepository;
         private readonly IMapper _mapper;
 		private ResponseObject _responseObject;
+        private readonly ILogger<UserProfileController> _logger;
 
 
-		public UserProfileController(IUserProfile UserRepository, IMapper mapper)
+        public UserProfileController(IUserProfile UserRepository, IMapper mapper, ILogger<UserProfileController> logger)
         {
             _userProfileRepository = UserRepository;
             _mapper = mapper;
+            _logger = logger;
         }
 
         // GET: api/<AboutController>
         [HttpGet]
         public ActionResult<IEnumerable<UserProfileDto>> aboutDetails()
         {
-            var id = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
-
-            if (!_userProfileRepository.checkAbout(id))
+            try
             {
-                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
-                return NotFound(_responseObject);
-			}
-            else
-            {
-				var aboutFromDB = _userProfileRepository.GetAbout(id);
+                var id = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
 
-				var AboutDto = _mapper.Map<UserProfileDto>(aboutFromDB);
-				_responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull", AboutDto);
-			}
-			return Ok(_responseObject);
+                if (!_userProfileRepository.checkAbout(id))
+                {
+                    _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
+                    return NotFound(_responseObject);
+                }
+                else
+                {
+                    var aboutFromDB = _userProfileRepository.GetAbout(id);
+
+                    var AboutDto = _mapper.Map<UserProfileDto>(aboutFromDB);
+                    _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull", AboutDto);
+                }
+                return Ok(_responseObject);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while retrieving user about details.");
+
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "An error occurred while retrieving user about details.");
+                return StatusCode(StatusCodes.Status500InternalServerError, _responseObject);
+            }
+
+           
         }
 
         // POST api/<AboutController>
         [HttpPost]
         public ActionResult AddAboutDetails (UserProfileDto userProfileDetails)
         {
-            var id = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
-
-            if (id == null)
+            try
             {
-				_responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
-                return NotFound(_responseObject);
-			}
-            else
-            {
-				var finalAbout = _mapper.Map<UserProfile>(userProfileDetails);
+                var id = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
 
-                var aboutAdded = _userProfileRepository.AddAbout(id, finalAbout);
-
-                if (aboutAdded)
+                if (id == null)
                 {
-                    _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "About Details Added Succesfully");
+                    _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
+                    return NotFound(_responseObject);
                 }
                 else
                 {
-                    _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "About Details already Exists");
-                    return BadRequest(_responseObject);
+                    var finalAbout = _mapper.Map<UserProfile>(userProfileDetails);
+
+                    var aboutAdded = _userProfileRepository.AddAbout(id, finalAbout);
+
+                    if (aboutAdded)
+                    {
+                        _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "About Details Added Succesfully");
+                    }
+                    else
+                    {
+                        _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "About Details already Exists");
+                        return BadRequest(_responseObject);
+                    }
+
                 }
 
+                return Ok(_responseObject);
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while adding user profile.");
 
-			return Ok(_responseObject);
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "An error occurred while adding user profile.");
+                return StatusCode(StatusCodes.Status500InternalServerError, _responseObject);
+            }
+            
         }
 
         // PUT api/<AboutController>/5
         [HttpPut]
         public ActionResult Put(UserProfileDto about)
         {
-            var id = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
-            if (id == null)
+            try
             {
-				_responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
-			}
-            else
-            {
-				_userProfileRepository.updateAbout(id, about);
-				_responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "About Details updated successfully");
-			}
-			//var finalAbout = _mapper.Map<About>(about);
+                var id = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
+                if (id == null)
+                {
+                    _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
+                }
+                else
+                {
+                    _userProfileRepository.updateAbout(id, about);
+                    _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "About Details updated successfully");
+                }
+                //var finalAbout = _mapper.Map<About>(about);
 
-			return Ok(_responseObject);
+                return Ok(_responseObject);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while updating user details.");
+
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "An error occurred while user details.");
+                return StatusCode(StatusCodes.Status500InternalServerError, _responseObject);
+            }
+           
         }
 
         // DELETE api/<AboutController>/5
         [HttpDelete("{aboutId}")]
         public ActionResult Delete(int aboutId)
         {
-            var id = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
-
-            if (id == null)
+            try
             {
-				_responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
-			}
-            else
-            {
-				_userProfileRepository.removeAbout(id, aboutId);
-				_responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "About Details successfully");
+                var id = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
 
-			}
-			return Ok(_responseObject);
+                if (id == null)
+                {
+                    _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
+                }
+                else
+                {
+                    _userProfileRepository.removeAbout(id, aboutId);
+                    _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "About Details successfully");
+
+                }
+                return Ok(_responseObject);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while deleting user details.");
+
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "An error occurred while deleting user details.");
+                return StatusCode(StatusCodes.Status500InternalServerError, _responseObject);
+            }
+          
         }
 
         [HttpGet("/api/users")]
@@ -126,10 +173,22 @@ namespace Portfolio_API.Controllers
         [HttpGet("/api/users/pending")]
         public ActionResult<IEnumerable<UserProfile>> GetUsersPendingRequest()
         {
-            var id = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
+            try
+            {
+                var id = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
 
-            var users = _userProfileRepository.getUserPendingRequests(id);
-            return Ok(users);
+                var users = _userProfileRepository.getUserPendingRequests(id);
+                return Ok(users);
+
+            }
+             catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while retrieving user pending request.");
+
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "An error occurred while retrieving user pending request.");
+                return StatusCode(StatusCodes.Status500InternalServerError, _responseObject);
+            }
+          
         }
     }
 }

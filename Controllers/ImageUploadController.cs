@@ -32,15 +32,6 @@ namespace Portfolio_API.Controllers
                 if (file != null)
                 {
 
-                    //if (obj.Product.ImageUrl != null)
-                    //{
-                    //    var oldImagePath = Path.Combine(wwwrootpath, obj.Product.ImageUrl.TrimStart('\\'));
-                    //    if (System.IO.File.Exists(oldImagePath))
-                    //    {
-                    //        System.IO.File.Delete(oldImagePath);
-                    //    }
-                    //}
-
                     var fileStream = new FileStream(Path.Combine(Uploadpath, filename + extension), FileMode.Create);
 
                     file.CopyTo(fileStream);

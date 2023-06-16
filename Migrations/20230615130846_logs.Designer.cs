@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Portfolio_API.Data;
 
@@ -11,9 +12,10 @@ using Portfolio_API.Data;
 namespace Portfolio_API.Migrations
 {
     [DbContext(typeof(PorfolioContext))]
-    partial class PorfolioContextModelSnapshot : ModelSnapshot
+    [Migration("20230615130846_logs")]
+    partial class logs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

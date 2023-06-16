@@ -15,11 +15,13 @@ namespace Portfolio_API.Controllers
         private readonly IProducts _userProductsRepository;
         private readonly IMapper _mapper;
         private ResponseObject _responseObject;
+        private readonly ILogger<UserProductsController> _logger;
 
-        public UserProductsController( IMapper mapper, IProducts userProductsRepository)
+        public UserProductsController( IMapper mapper, IProducts userProductsRepository, ILogger<UserProductsController> logger)
         {
             _mapper = mapper;
             _userProductsRepository = userProductsRepository;
+            _logger = logger;
         }
 
 
@@ -29,119 +31,153 @@ namespace Portfolio_API.Controllers
 
         public ActionResult<List<UserProductsDto>> GetAllProducts()
         {
-            var productsFromDb = _userProductsRepository.GetProducts();
-
-            if(productsFromDb == null)
+            try
             {
-                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "No Product is found");
-                return NotFound(_responseObject);
+                var productsFromDb = _userProductsRepository.GetProducts();
+
+                if (productsFromDb == null)
+                {
+                    _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "No Product is found");
+                    return NotFound(_responseObject);
+                }
+
+                var approvedProducts = productsFromDb.Where(x => x.Status != "pending").ToList();
+
+                if (approvedProducts.Count() == 0)
+                {
+                    _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Products are waiting for Approval");
+                    return NotFound(_responseObject);
+                }
+
+                UserProductsDto[] userProducts = new UserProductsDto[approvedProducts.Count()];
+
+                for (int i = 0; i < userProducts.Count(); i++)
+                {
+                    userProducts[i] = new UserProductsDto();
+
+                    userProducts[i].Title = approvedProducts[i].Title;
+                    userProducts[i].Description = approvedProducts[i].Description;
+                    userProducts[i].PermaLink = approvedProducts[i].PermaLink;
+                    userProducts[i].DateCreated = approvedProducts[i].DateCreated;
+                    userProducts[i].Type = approvedProducts[i].Type;
+                    userProducts[i].Image = approvedProducts[i].Image;
+                    userProducts[i].VideoUrl = approvedProducts[i].VideoUrl;
+
+                    userProducts[i].ProfileUrl = approvedProducts[i].UserProfile.ProfileUrl;
+                    userProducts[i].Name = approvedProducts[i].UserProfile.Name;
+                    userProducts[i].Email = approvedProducts[i].UserProfile.Email;
+                    userProducts[i].linkedin = approvedProducts[i].UserProfile.Linkedin;
+                    userProducts[i].Github = approvedProducts[i].UserProfile.Github;
+                }
+
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull", userProducts);
+
+
+                return Ok(_responseObject);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while retrieving products.");
+
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "An error occurred while retrieving products.");
+                return StatusCode(StatusCodes.Status500InternalServerError, _responseObject);
             }
 
-            var approvedProducts = productsFromDb.Where(x => x.Status != "pending").ToList();
-
-            if(approvedProducts.Count() == 0)
-            {
-                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Products are waiting for Approval");
-                return NotFound(_responseObject);
-            }
-
-            UserProductsDto[] userProducts = new UserProductsDto[approvedProducts.Count()];
-
-            for(int i=0; i < userProducts.Count(); i++)
-            {
-                userProducts[i] = new UserProductsDto();
-
-                userProducts[i].Title = approvedProducts[i].Title;
-                userProducts[i].Description = approvedProducts[i].Description;
-                userProducts[i].PermaLink = approvedProducts[i].PermaLink;
-                userProducts[i].DateCreated = approvedProducts[i].DateCreated;
-                userProducts[i].Type = approvedProducts[i].Type;
-                userProducts[i].Image = approvedProducts[i].Image;
-                userProducts[i].VideoUrl = approvedProducts[i].VideoUrl;
-
-                userProducts[i].ProfileUrl = approvedProducts[i].UserProfile.ProfileUrl;
-                userProducts[i].Name = approvedProducts[i].UserProfile.Name;
-                userProducts[i].Email = approvedProducts[i].UserProfile.Email;
-                userProducts[i].linkedin = approvedProducts[i].UserProfile.Linkedin;
-                userProducts[i].Github = approvedProducts[i].UserProfile.Github;
-            }
-
-            _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull", userProducts);
-
-
-            return Ok(_responseObject);
+           
         }
 
         [HttpGet]
         [AllowAnonymous]
         public ActionResult<List<UserProductsDto>> GetUserProducts()
         {
-            var userId = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
-            if(userId == null)
+            try
             {
-                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "User Not Found");
-                return NotFound(_responseObject);
-            }
-            var productsFromDb = _userProductsRepository.GetProductsByUserID(userId);
+                var userId = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
+                if (userId == null)
+                {
+                    _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "User Not Found");
+                    return NotFound(_responseObject);
+                }
+                var productsFromDb = _userProductsRepository.GetProductsByUserID(userId);
 
-            if (productsFromDb == null)
+                if (productsFromDb == null)
+                {
+                    _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "No Product is found");
+                    return NotFound(_responseObject);
+                }
+
+                var approvedProducts = productsFromDb.Where(x => x.Status != "pending").ToList();
+
+                if (approvedProducts.Count() == 0)
+                {
+                    _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Products are waiting for Approval");
+                    return NotFound(_responseObject);
+                }
+
+                UserProductsDto[] userProducts = new UserProductsDto[approvedProducts.Count()];
+
+                for (int i = 0; i < userProducts.Count(); i++)
+                {
+                    userProducts[i] = new UserProductsDto();
+
+                    userProducts[i].Title = approvedProducts[i].Title;
+                    userProducts[i].Description = approvedProducts[i].Description;
+                    userProducts[i].PermaLink = approvedProducts[i].PermaLink;
+                    userProducts[i].DateCreated = approvedProducts[i].DateCreated;
+                    userProducts[i].Type = approvedProducts[i].Type;
+                    userProducts[i].Image = approvedProducts[i].Image;
+                    userProducts[i].VideoUrl = approvedProducts[i].VideoUrl;
+
+                    userProducts[i].ProfileUrl = approvedProducts[i].UserProfile.ProfileUrl;
+                    userProducts[i].Name = approvedProducts[i].UserProfile.Name;
+                    userProducts[i].Email = approvedProducts[i].UserProfile.Email;
+                    userProducts[i].linkedin = approvedProducts[i].UserProfile.Linkedin;
+                    userProducts[i].Github = approvedProducts[i].UserProfile.Github;
+                }
+
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull", userProducts);
+
+
+                return Ok(_responseObject);
+            }
+            catch (Exception ex)
             {
-                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "No Product is found");
-                return NotFound(_responseObject);
+                _logger.LogError(ex, "An error occurred while retrieving user products.");
+
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "An error occurred while retrieving user products.");
+                return StatusCode(StatusCodes.Status500InternalServerError, _responseObject);
             }
-
-            var approvedProducts = productsFromDb.Where(x => x.Status != "pending").ToList();
-
-            if (approvedProducts.Count() == 0)
-            {
-                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Products are waiting for Approval");
-                return NotFound(_responseObject);
-            }
-
-            UserProductsDto[] userProducts = new UserProductsDto[approvedProducts.Count()];
-
-            for (int i = 0; i < userProducts.Count(); i++)
-            {
-                userProducts[i] = new UserProductsDto();
-
-                userProducts[i].Title = approvedProducts[i].Title;
-                userProducts[i].Description = approvedProducts[i].Description;
-                userProducts[i].PermaLink = approvedProducts[i].PermaLink;
-                userProducts[i].DateCreated = approvedProducts[i].DateCreated;
-                userProducts[i].Type = approvedProducts[i].Type;
-                userProducts[i].Image = approvedProducts[i].Image;
-                userProducts[i].VideoUrl = approvedProducts[i].VideoUrl;
-
-                userProducts[i].ProfileUrl = approvedProducts[i].UserProfile.ProfileUrl;
-                userProducts[i].Name = approvedProducts[i].UserProfile.Name;
-                userProducts[i].Email = approvedProducts[i].UserProfile.Email;
-                userProducts[i].linkedin = approvedProducts[i].UserProfile.Linkedin;
-                userProducts[i].Github = approvedProducts[i].UserProfile.Github;
-            }
-
-            _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull", userProducts);
-
-
-            return Ok(_responseObject);
+           
         }
 
         //POST 
         [HttpPost]
         public ActionResult AddUserProduct([FromBody] ProductsDto userProducts)
         {
-            var userId = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
-            if (userId == null)
+            try
             {
-                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "User Not Found");
-                return NotFound(_responseObject);
+                var userId = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
+                if (userId == null)
+                {
+                    _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "User Not Found");
+                    return NotFound(_responseObject);
+                }
+
+                var addProducts = _mapper.Map<UserProducts>(userProducts);
+
+                _userProductsRepository.AddProductsByUserID(userId, addProducts);
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "User Product Added Succesfully");
+
+                return Ok(_responseObject);
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while adding user products.");
 
-            var addProducts = _mapper.Map<UserProducts>(userProducts);
-
-            _userProductsRepository.AddProductsByUserID(userId, addProducts);
-            _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "User Product Added Succesfully");
-
-            return Ok(_responseObject);
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "An error occurred while adding user products.");
+                return StatusCode(StatusCodes.Status500InternalServerError, _responseObject);
+            }
+           
 
         }
 
@@ -149,19 +185,30 @@ namespace Portfolio_API.Controllers
         [HttpPut("{productsId}")]
         public ActionResult UpdateUserProducts(int productsId, [FromBody] ProductsDto userProducts)
         {
-            var userId = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
-            if (userId == null)
+            try
             {
-                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "User Not Found");
-                return NotFound(_responseObject);
+                var userId = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
+                if (userId == null)
+                {
+                    _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "User Not Found");
+                    return NotFound(_responseObject);
+                }
+
+                var updateUserProducts = _mapper.Map<UserProducts>(userProducts);
+
+                _userProductsRepository.updateProductsByUserID(userId, productsId, updateUserProducts);
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "User Updated Updated succesfully");
+
+                return Ok(_responseObject);
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while updating user products.");
 
-            var updateUserProducts = _mapper.Map<UserProducts>(userProducts);
-
-            _userProductsRepository.updateProductsByUserID(userId, productsId, updateUserProducts);
-            _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "User Updated Updated succesfully");
-
-            return Ok(_responseObject);
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "An error occurred while updating user products.");
+                return StatusCode(StatusCodes.Status500InternalServerError, _responseObject);
+            }
+          
 
         }
 
@@ -169,18 +216,30 @@ namespace Portfolio_API.Controllers
         [HttpDelete("{productsId}")]
         public IActionResult DeleteUserProducts(int productsId)
         {
-            var userId = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
-
-            if (userId == null)
+            try
             {
-                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "User Not Found");
-                return NotFound(_responseObject);
+                var userId = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
+
+                if (userId == null)
+                {
+                    _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "User Not Found");
+                    return NotFound(_responseObject);
+                }
+
+                _userProductsRepository.removeProductsByUserID(userId, productsId);
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "User Product Deleted successfully");
+
+                return Ok(_responseObject);
+
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while deleting user products.");
 
-            _userProductsRepository.removeProductsByUserID(userId, productsId);
-            _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "User Product Deleted successfully");
-
-            return Ok(_responseObject);
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "An error occurred while deleting user products.");
+                return StatusCode(StatusCodes.Status500InternalServerError, _responseObject);
+            }
+          
 
         }
     }

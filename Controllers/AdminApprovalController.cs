@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using log4net;
 using Microsoft.AspNetCore.Mvc;
 using Portfolio_API.DTOs;
 using Portfolio_API.DTOs.Admin;
@@ -23,10 +24,14 @@ namespace Portfolio_API.Controllers
         private readonly IUserBlogs _userBlogs;
         private readonly IMapper _mapper;
         private readonly IUserServiceGig _service;
+        private readonly ILogger<AdminApprovalController> _logger;
+
 
         public AdminApprovalController(IEducation education,IProducts product, 
             IUserExperience experience, ISkills skill, 
-            IUserBlogs userBlogs, IMapper mapper, IUserServiceGig serviceGig)
+            IUserBlogs userBlogs, IMapper mapper, IUserServiceGig serviceGig,
+            ILogger<AdminApprovalController> logger
+)
         {
             _education = education;
             _experience = experience;
@@ -35,6 +40,8 @@ namespace Portfolio_API.Controllers
             _userBlogs = userBlogs;
             _mapper = mapper;
             _service = serviceGig;
+            _logger = logger;
+
         }
 
         // Education Approval Endpoints
@@ -43,55 +50,88 @@ namespace Portfolio_API.Controllers
         [HttpGet("geteducation")]
         public ActionResult<IEnumerable<AdminGetEducation>> GetEducationDetailsAdmin(string userId)
         {
-            if (userId == null)
+            try
             {
-                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
-                return NotFound(_responseObject);
+                if (userId == null)
+                {
+                    _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
+                    return NotFound(_responseObject);
+                }
+
+                var educationDetails = _education.GetDetails(userId);
+
+                //var finalEduDetail = _mapper.Map<IEnumerable<AdminGetEducation>>(educationDetails);
+
+                //_responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull", educationDetails);
+
+                return Ok(educationDetails);
+
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while getting education details.");
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "An error occurred while getting education details.");
+                return StatusCode(StatusCodes.Status500InternalServerError, _responseObject);
 
-            var educationDetails = _education.GetDetails(userId);
-
-            //var finalEduDetail = _mapper.Map<IEnumerable<AdminGetEducation>>(educationDetails);
-
-            //_responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull", educationDetails);
-
-            return Ok(educationDetails);
+            }
+          
         }
 
         [HttpPut("education/{eduId}")]
         public IActionResult updateEducation(string userId, int eduId, AdminPostEducationDto edu)
         {
-            if (edu == null)
+            try
             {
-                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
-                return NotFound(_responseObject);
+                if (edu == null)
+                {
+                    _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
+                    return NotFound(_responseObject);
+                }
+
+                var eduToUpdate = _mapper.Map<Education>(edu);
+
+                _education.updateEducationRequest(userId, eduId, eduToUpdate);
+
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull");
+
+                return Ok(_responseObject);
             }
-
-            var eduToUpdate = _mapper.Map<Education>(edu);
-
-            _education.updateEducationRequest(userId, eduId, eduToUpdate);
-
-            _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull");
-
-            return Ok(_responseObject);
+            catch(Exception ex) 
+            {
+                _logger.LogError(ex, "An error occurred while updating education details.");
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "An error occurred while updating education details.");
+                return StatusCode(StatusCodes.Status500InternalServerError, _responseObject);
+            }
+          
         }
 
         // DELETE api/<AdminApprovalController>/5
         [HttpDelete("education/{eduId}")]
         public IActionResult DeleteEducation(string userId, int eduId)
         {
-            if (eduId == 0)
+            try
             {
-                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
-                return NotFound(_responseObject);
+                if (eduId == 0)
+                {
+                    _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
+                    return NotFound(_responseObject);
+                }
+
+                _education.removeEducationRequest(userId, eduId);
+
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull");
+
+
+                return Ok(_responseObject);
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while deleting education details.");
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "An error occurred while deleting education details.");
+                return StatusCode(StatusCodes.Status500InternalServerError, _responseObject);
             }
 
-            _education.removeEducationRequest(userId, eduId);
-
-            _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull");
-
-
-            return Ok(_responseObject);
         }
 
         // Skill Approval Endpoints
@@ -99,53 +139,83 @@ namespace Portfolio_API.Controllers
         [HttpGet("getskills")]
         public ActionResult<List<AdminGetSkillDto>> GetUserSkills(string userId)
         {
-            if (userId == null)
+            try
             {
-                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
-                return NotFound(_responseObject);
+                if (userId == null)
+                {
+                    _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
+                    return NotFound(_responseObject);
+                }
+
+                var skillsFromDB = _skill.GetSkillsByUserID(userId);
+
+
+                return Ok(skillsFromDB);
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while retrieving user skills.");
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "An error occurred while retrieving user skills.");
+                return StatusCode(StatusCodes.Status500InternalServerError, _responseObject);
             }
 
-            var skillsFromDB = _skill.GetSkillsByUserID(userId);
-
-            //var skillsDto = _mapper.Map<IEnumerable<AdminGetSkillDto>>(skillsFromDB);
-
-            //_responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull", skillsFromDB);
-
-            return Ok(skillsFromDB);
         }
 
         [HttpPut("skill/{skillId}")]
         public IActionResult updateSkill(string userId, int skillId, AdminPostSkillDto edu)
         {
-            if (edu == null)
+            try
             {
-                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
-                return NotFound(_responseObject);
+
+                if (edu == null)
+                {
+                    _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
+                    return NotFound(_responseObject);
+                }
+
+                var skillToUpdate = _mapper.Map<Skills>(edu);
+
+                _skill.updateSkillsRequest(userId, skillId, skillToUpdate);
+
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull");
+
+                return Ok(_responseObject);
             }
-
-            var skillToUpdate = _mapper.Map<Skills>(edu);
-
-            _skill.updateSkillsRequest(userId, skillId, skillToUpdate);
-
-            _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull");
-
-            return Ok(_responseObject);
+          
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while updating user skills.");
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "An error occurred while updating user skills.");
+                return StatusCode(StatusCodes.Status500InternalServerError, _responseObject);
+            }
         }
 
         [HttpDelete("skill/{skillId}")]
         public IActionResult DeleteSkill(string userId, int skillId)
         {
-            if (skillId == 0)
+            try
             {
-                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
-                return NotFound(_responseObject);
+                if (skillId == 0)
+                {
+                    _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
+                    return NotFound(_responseObject);
+                }
+
+                _skill.removeSkillsRequest(userId, skillId);
+
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull");
+
+                return Ok(_responseObject);
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while deleting user skills.");
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "An error occurred while deleting user skills.");
+                return StatusCode(StatusCodes.Status500InternalServerError, _responseObject);
             }
 
-            _skill.removeSkillsRequest(userId, skillId);
-
-            _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull");
-
-            return Ok(_responseObject);
         }
 
 
@@ -157,55 +227,85 @@ namespace Portfolio_API.Controllers
         [HttpGet("getexperience")]
         public ActionResult<List<AdminGetExperienceDto>> GetUserExperiences(string userId)
         {
-            if (userId == null)
+            try
             {
-                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "No Experience found associated with current user");
-                return NotFound(_responseObject);
+                if (userId == null)
+                {
+                    _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "No Experience found associated with current user");
+                    return NotFound(_responseObject);
+                }
+
+
+                var experienceFromDB = _experience.GetUserExperience(userId);
+
+                return Ok(experienceFromDB);
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while retrieving user Experiences.");
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "An error occurred while retrieving user Experiences.");
+                return StatusCode(StatusCodes.Status500InternalServerError, _responseObject);
             }
 
-
-            var experienceFromDB = _experience.GetUserExperience(userId);
-
-            //var experienceDto = _mapper.Map<List<AdminGetExperienceDto>>(experienceFromDB);
-
-            //_responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull", experienceFromDB);
-
-            return Ok(experienceFromDB);
 
         }
 
         [HttpPut("experience/{expId}")]
         public IActionResult updateExperience(string userId, int expId, AdminPostExperienceDto exp)
         {
-            if (exp == null)
+            try
             {
-                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
-                return NotFound(_responseObject);
+                if (exp == null)
+                {
+                    _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
+                    return NotFound(_responseObject);
+                }
+
+                var ExperienceToUpdate = _mapper.Map<UserExperience>(exp);
+
+                _experience.UpdateUserExperienceRequest(userId, expId, ExperienceToUpdate);
+
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull");
+
+                return Ok(_responseObject);
+
+            }
+           
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while updating Experiences.");
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "An error occurred while updating Experiences.");
+                return StatusCode(StatusCodes.Status500InternalServerError, _responseObject);
             }
 
-            var ExperienceToUpdate = _mapper.Map<UserExperience>(exp);
-
-            _experience.UpdateUserExperienceRequest(userId, expId, ExperienceToUpdate);
-
-            _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull");
-
-            return Ok(_responseObject);
         }
 
         [HttpDelete("experience/{expId}")]
         public IActionResult DeleteExperience(string userId, int expId)
         {
-            if (expId == 0)
+            try
             {
-                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
-                return NotFound(_responseObject);
+                if (expId == 0)
+                {
+                    _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
+                    return NotFound(_responseObject);
+                }
+
+                _experience.RemoveUserExperienceRequest(userId, expId);
+
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull");
+
+                return Ok(_responseObject);
+
             }
-
-            _experience.RemoveUserExperienceRequest(userId, expId);
-
-            _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull");
-
-            return Ok(_responseObject);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while deleting Experiences.");
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "An error occurred while deleting Experiences.");
+                return StatusCode(StatusCodes.Status500InternalServerError, _responseObject);
+            }
+          
         }
 
 
@@ -216,54 +316,80 @@ namespace Portfolio_API.Controllers
         [HttpGet("getarticals")]
         public ActionResult<List<AdminGetExperienceDto>> GetUserArticals(string userId)
         {
-            if (userId == null)
+            try
             {
-                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "No Experience found associated with current user");
-                return NotFound(_responseObject);
+                if (userId == null)
+                {
+                    _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "No Experience found associated with current user");
+                    return NotFound(_responseObject);
+                }
+
+                var userBlogsFromDb = _userBlogs.GetByUserId(userId);
+
+                return Ok(userBlogsFromDb);
             }
-
-            var userBlogsFromDb = _userBlogs.GetByUserId(userId);
-
-            //var experienceDto = _mapper.Map<List<AdminGetExperienceDto>>(experienceFromDB);
-
-            //_responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull", experienceFromDB);
-
-            return Ok(userBlogsFromDb);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while retrieving articals.");
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "An error occurred while retrieving articals.");
+                return StatusCode(StatusCodes.Status500InternalServerError, _responseObject);
+            }
 
         }
 
         [HttpPut("artical/{articalId}")]
         public IActionResult updateArtical(string userId, int articalId, AdminBlogPostDto blogs)
         {
-            if (blogs == null)
+            try
             {
-                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
-                return NotFound(_responseObject);
+                if (blogs == null)
+                {
+                    _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
+                    return NotFound(_responseObject);
+                }
+
+                var ExperienceToUpdate = _mapper.Map<UserBlogs>(blogs);
+
+                _userBlogs.updateBlogsRequest(userId, articalId, ExperienceToUpdate);
+
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull");
+
+                return Ok(_responseObject);
             }
-
-            var ExperienceToUpdate = _mapper.Map<UserBlogs>(blogs);
-
-            _userBlogs.updateBlogsRequest(userId, articalId, ExperienceToUpdate);
-
-            _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull");
-
-            return Ok(_responseObject);
+           
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while updating articals.");
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "An error occurred while updating articals.");
+                return StatusCode(StatusCodes.Status500InternalServerError, _responseObject);
+            }
         }
 
         [HttpDelete("artical/{articalId}")]
         public IActionResult DeleteArtical(string userId, int articalId)
         {
-            if (articalId == 0)
+           
+            try
             {
-                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
-                return NotFound(_responseObject);
+                if (articalId == 0)
+                {
+                    _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
+                    return NotFound(_responseObject);
+                }
+
+                _userBlogs.removeBlogsRequest(userId, articalId);
+
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull");
+
+                return Ok(_responseObject);
+
             }
-
-            _userBlogs.removeBlogsRequest(userId, articalId);
-
-            _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull");
-
-            return Ok(_responseObject);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while deleting articals.");
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "An error occurred while deleting articals.");
+                return StatusCode(StatusCodes.Status500InternalServerError, _responseObject);
+            }
         }
 
         // Product APIs
@@ -271,54 +397,82 @@ namespace Portfolio_API.Controllers
         [HttpGet("getproducts")]
         public ActionResult<List<AdminGetExperienceDto>> GetUserProducts(string userId)
         {
-            if (userId == null)
+            try
             {
-                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "No Product found associated with current user");
-                return NotFound(_responseObject);
+                if (userId == null)
+                {
+                    _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "No Product found associated with current user");
+                    return NotFound(_responseObject);
+                }
+
+                var userProductsFromDb = _product.GetProductsByUserID(userId);
+                return Ok(userProductsFromDb);
+
             }
-
-            var userProductsFromDb = _product.GetProductsByUserID(userId);
-
-            //var experienceDto = _mapper.Map<List<AdminGetExperienceDto>>(experienceFromDB);
-
-            //_responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull", experienceFromDB);
-
-            return Ok(userProductsFromDb);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while retrieving articals.");
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "An error occurred while retrieving articals.");
+                return StatusCode(StatusCodes.Status500InternalServerError, _responseObject);
+            }
+         
 
         }
 
         [HttpPut("product/{productId}")]
         public IActionResult UpdateProduct(string userId, int productId, AdminProductPostDto products)
         {
-            if (products == null)
+            try
             {
-                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
-                return NotFound(_responseObject);
+                if (products == null)
+                {
+                    _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
+                    return NotFound(_responseObject);
+                }
+
+                var ProductsToUpdate = _mapper.Map<UserProducts>(products);
+
+                _product.updateProductsRequest(userId, productId, ProductsToUpdate);
+
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Product Updated Successfully");
+
+                return Ok(_responseObject);
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while updating product.");
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "An error occurred while  updating product.");
+                return StatusCode(StatusCodes.Status500InternalServerError, _responseObject);
             }
 
-            var ProductsToUpdate = _mapper.Map<UserProducts>(products);
-
-            _product.updateProductsRequest(userId, productId, ProductsToUpdate);
-
-            _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Product Updated Successfully");
-
-            return Ok(_responseObject);
         }
 
         [HttpDelete("product/{productId}")]
         public IActionResult DeleteProduct(string userId, int productId)
         {
-            if (productId == 0)
+            try
             {
-                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
-                return NotFound(_responseObject);
+                if (productId == 0)
+                {
+                    _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
+                    return NotFound(_responseObject);
+                }
+
+                _product.removeProductsRequest(userId, productId);
+
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Product Deleted Successfully");
+
+                return Ok(_responseObject);
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while deleting product.");
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "An error occurred while  deleting product.");
+                return StatusCode(StatusCodes.Status500InternalServerError, _responseObject);
             }
 
-            _product.removeProductsRequest(userId, productId);
-
-            _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Product Deleted Successfully");
-
-            return Ok(_responseObject);
         }
 
         // Service APIs
@@ -326,54 +480,84 @@ namespace Portfolio_API.Controllers
         [HttpGet("getservices")]
         public ActionResult<List<AdminGetExperienceDto>> GetUserService(string userId)
         {
-            if (userId == null)
+            try
             {
-                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "No Product found associated with current user");
-                return NotFound(_responseObject);
+                if (userId == null)
+                {
+                    _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "No Product found associated with current user");
+                    return NotFound(_responseObject);
+                }
+
+                var userProductsFromDb = _service.GetServiceGigByUserId(userId);
+
+                return Ok(userProductsFromDb);
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while retrieving user services.");
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "An error occurred while retrieving user services.");
+                return StatusCode(StatusCodes.Status500InternalServerError, _responseObject);
             }
 
-            var userProductsFromDb = _service.GetServiceGigByUserId(userId);
-
-            //var experienceDto = _mapper.Map<List<AdminGetExperienceDto>>(experienceFromDB);
-
-            //_responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull", experienceFromDB);
-
-            return Ok(userProductsFromDb);
 
         }
 
         [HttpPut("service/{serviceId}")]
         public IActionResult UpdateService(string userId, int serviceId, AdminUserServiceGigPostDto service)
         {
-            if (service == null)
+            try
             {
-                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
-                return NotFound(_responseObject);
+                if (service == null)
+                {
+                    _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
+                    return NotFound(_responseObject);
+                }
+
+                var ProductsToUpdate = _mapper.Map<UserServiceGig>(service);
+
+                _service.updateServiceGigRequest(userId, serviceId, ProductsToUpdate);
+
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Product Updated Successfully");
+
+                return Ok(_responseObject);
+
             }
-
-            var ProductsToUpdate = _mapper.Map<UserServiceGig>(service);
-
-            _service.updateServiceGigRequest(userId, serviceId, ProductsToUpdate);
-
-            _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Product Updated Successfully");
-
-            return Ok(_responseObject);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while updating user services.");
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "An error occurred while updating user services.");
+                return StatusCode(StatusCodes.Status500InternalServerError, _responseObject);
+            }
+           
         }
 
         [HttpDelete("service/{serviceId}")]
         public IActionResult DeleteService(string userId, int serviceId)
         {
-            if (serviceId == 0)
+            try
             {
-                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
-                return NotFound(_responseObject);
+
+                if (serviceId == 0)
+                {
+                    _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Result not found");
+                    return NotFound(_responseObject);
+                }
+
+                _service.removeServiceGigRequest(userId, serviceId);
+
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Product Deleted Successfully");
+
+                return Ok(_responseObject);
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while deleting user services.");
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "An error occurred while deleting user services.");
+                return StatusCode(StatusCodes.Status500InternalServerError, _responseObject);
             }
 
-            _service.removeServiceGigRequest(userId, serviceId);
-
-            _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Product Deleted Successfully");
-
-            return Ok(_responseObject);
         }
     }
 }

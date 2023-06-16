@@ -1,3 +1,5 @@
+using log4net.Config;
+using log4net;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -11,6 +13,9 @@ using Portfolio_API.Repository;
 using Portfolio_API.Repository.Repository_Interface;
 using System.Text;
 using System.Text.Json.Serialization;
+//using Portfolio_API.Extensions;
+using Microsoft.Extensions.Logging;
+//using Microsoft.Extensions.Logging.Log4Net.AspNetCore; // Add this line if it's missing
 
 namespace Portfolio_API
 {
@@ -89,6 +94,43 @@ namespace Portfolio_API
                         Encoding.UTF8.GetBytes(builder.Configuration["Authentication:SecretForKey"]))
                 };
             });
+            builder.Logging.AddLog4Net();
+
+            // log4net service
+
+            //public static IHostBuilder CreateHostBuilder(string[] args) =>
+            //    Host.CreateDefaultBuilder(args)
+            //        .ConfigureServices((hostContext, services) =>
+            //        {
+            //            services.AddLog4net();
+            //        })
+            //        .ConfigureWebHostDefaults(webBuilder =>
+            //        {
+            //            webBuilder.UseStartup<Program>();
+            //        });
+            //builder.Services.AddLog4net("log4net.config");
+            //var logRepository = LogManager.GetRepository(typeof(Program).Assembly);
+            //XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
+
+            //     public static IHostBuilder CreateHostBuilder(string[] args) =>
+            //Host.CreateDefaultBuilder(args)
+            //    .ConfigureWebHostDefaults(webBuilder =>
+            //    {
+            //        webBuilder.UseStartup<Startup>();
+            //    })
+            //    .ConfigureLogging(builder =>
+            //    {
+            //        builder.ClearProviders();
+            //        builder.AddLog4Net();
+            //    });
+            // serilog
+            //var logger = new LoggerConfiguration()
+            //.ReadFrom.Configuration(builder.Configuration)
+            //.Enrich.FromLogContext()
+            //.CreateLogger();
+            //    builder.Logging.ClearProviders();
+            //    builder.Logging.AddSerilog(logger);
+
 
             var app = builder.Build();
 

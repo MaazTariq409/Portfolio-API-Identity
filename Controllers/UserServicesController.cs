@@ -15,31 +15,44 @@ namespace Portfolio_API.Controllers
         private readonly IUserServices _servicesRepository;
         private readonly IMapper _mapper;
         private ResponseObject _responseObject;
+        private readonly ILogger<UserServicesController> _logger;
 
-        public UserServicesController( IMapper mapper, IUserServices ServicesRepository)
+        public UserServicesController( IMapper mapper, IUserServices ServicesRepository, ILogger<UserServicesController> logger)
         {
             _mapper = mapper;
             _servicesRepository = ServicesRepository;
+            _logger = logger;
         }
 
         [HttpGet]
         public ActionResult<List<AdminUserServiceGetDto>> GetServices()
         {
-           
-            var servicesFromDb = _servicesRepository.GetServices();
-
-            if(servicesFromDb == null)
+            try
             {
-                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "No Services Found");
-                return NotFound(_responseObject);
+                var servicesFromDb = _servicesRepository.GetServices();
+
+                if (servicesFromDb == null)
+                {
+                    _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "No Services Found");
+                    return NotFound(_responseObject);
+                }
+
+                var ServiceDto = _mapper.Map<IEnumerable<AdminUserServiceGetDto>>(servicesFromDb);
+
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull", ServiceDto);
+
+
+                return Ok(_responseObject);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while retrieving services.");
+
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "An error occurred while retrieving services.");
+                return StatusCode(StatusCodes.Status500InternalServerError, _responseObject);
             }
 
-            var ServiceDto = _mapper.Map<IEnumerable<AdminUserServiceGetDto>>(servicesFromDb);
-
-            _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull", ServiceDto);
-
-
-            return Ok(_responseObject);
+           
 
         }
 
@@ -47,18 +60,30 @@ namespace Portfolio_API.Controllers
         [HttpPost]
         public ActionResult AddService([FromBody] AdminUserServicePostDto service)
         {
-            if (service == null)
+            try
             {
-                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Can not add Null Value");
-                return NotFound(_responseObject);
+                if (service == null)
+                {
+                    _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "Can not add Null Value");
+                    return NotFound(_responseObject);
+                }
+
+                var serviceAdd = _mapper.Map<UserServices>(service);
+
+                _servicesRepository.AddServices(serviceAdd);
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Service Added Succesfully");
+
+                return Ok(_responseObject);
+
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while adding service.");
 
-            var serviceAdd = _mapper.Map<UserServices>(service);
-
-            _servicesRepository.AddServices(serviceAdd);
-            _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Service Added Succesfully");
-
-            return Ok(_responseObject);
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "An error occurred while adding service.");
+                return StatusCode(StatusCodes.Status500InternalServerError, _responseObject);
+            }
+           
 
         }
 
@@ -66,13 +91,24 @@ namespace Portfolio_API.Controllers
         [HttpPut("{serviceId}")]
         public ActionResult UpdateUserService(int serviceId, [FromBody] AdminUserServicePostDto userService)
         {
-        
-            var updateService = _mapper.Map<UserServices>(userService);
+            try
+            {
+                var updateService = _mapper.Map<UserServices>(userService);
 
-            _servicesRepository.updateServices(serviceId, updateService);
-            _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Service Updated succesfully");
+                _servicesRepository.updateServices(serviceId, updateService);
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Service Updated succesfully");
 
-            return Ok(_responseObject);
+                return Ok(_responseObject);
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while updating service.");
+
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "An error occurred while updating service.");
+                return StatusCode(StatusCodes.Status500InternalServerError, _responseObject);
+            }
+           
 
         }
 
@@ -80,10 +116,22 @@ namespace Portfolio_API.Controllers
         [HttpDelete("{serviceId}")]
         public IActionResult DeleteUserService(int serviceId)
         {
-            _servicesRepository.removeServices(serviceId);
-            _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Service Deleted successfully");
+            try
+            {
+                _servicesRepository.removeServices(serviceId);
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Service Deleted successfully");
 
-            return Ok(_responseObject);
+                return Ok(_responseObject);
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while deletin service.");
+
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "An error occurred while deleting service.");
+                return StatusCode(StatusCodes.Status500InternalServerError, _responseObject);
+            }
+          
 
         }
     }

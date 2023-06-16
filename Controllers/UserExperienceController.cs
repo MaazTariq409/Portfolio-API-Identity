@@ -15,12 +15,14 @@ namespace Portfolio_API.Controllers
         private readonly IUserExperience _userExperienceRepository;
         private readonly IMapper _mapper;
         private ResponseObject _responseObject;
+        private readonly ILogger<UserExperienceController> _logger;
 
-        public UserExperienceController( IMapper mapper, IUserExperience userExperienceRepository)
+
+        public UserExperienceController( IMapper mapper, IUserExperience userExperienceRepository, ILogger<UserExperienceController> logger)
         {
             _mapper = mapper;
             _userExperienceRepository = userExperienceRepository;
-
+            _logger = logger;
         }
 
 
@@ -28,25 +30,37 @@ namespace Portfolio_API.Controllers
         [HttpGet]
         public ActionResult<List<UserExperienceDto>> GetUserExperiences()
         {
-            var userId = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
-
-            if (userId == null)
+            try
             {
-                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "No Experience found associated with current user");
-                return NotFound(_responseObject);
+                var userId = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
+
+                if (userId == null)
+                {
+                    _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "No Experience found associated with current user");
+                    return NotFound(_responseObject);
+                }
+
+
+                var experienceFromDB = _userExperienceRepository.GetUserExperience(userId);
+
+                var approvedExp = experienceFromDB.Where(x => x.status != "pending").ToList();
+
+                var experienceDto = _mapper.Map<IEnumerable<UserExperienceDto>>(approvedExp);
+
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull", experienceDto);
+
+
+                return Ok(_responseObject);
+
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while retrieving user blogs.");
 
-
-            var experienceFromDB = _userExperienceRepository.GetUserExperience(userId);
-
-            var approvedExp = experienceFromDB.Where(x => x.status != "pending").ToList();
-
-            var experienceDto = _mapper.Map<IEnumerable<UserExperienceDto>>(approvedExp);
-
-            _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Succesfull", experienceDto);
-
-
-            return Ok(_responseObject);
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "An error occurred while retrieving user blogs.");
+                return StatusCode(StatusCodes.Status500InternalServerError, _responseObject);
+            }
+           
 
         }
 
@@ -55,19 +69,31 @@ namespace Portfolio_API.Controllers
         [HttpPost]
         public ActionResult AddUserExperience([FromBody] IEnumerable<UserExperienceDto> userExperiences)
         {
-            var userId = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
-            if (userId == null)
+            try
             {
-                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "User not found in database");
-                return NotFound(_responseObject);
+                var userId = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
+                if (userId == null)
+                {
+                    _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "User not found in database");
+                    return NotFound(_responseObject);
+                }
+
+                var addExperience = _mapper.Map<IEnumerable<UserExperience>>(userExperiences);
+
+                _userExperienceRepository.AddUserExperience(userId, addExperience);
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "User Experience Added Succesfully");
+
+                return Ok(_responseObject);
+
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while adding user experience.");
 
-            var addExperience = _mapper.Map<IEnumerable<UserExperience>>(userExperiences);
-
-            _userExperienceRepository.AddUserExperience(userId, addExperience);
-            _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "User Experience Added Succesfully");
-
-            return Ok(_responseObject);
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "An error occurred while adding user experience.");
+                return StatusCode(StatusCodes.Status500InternalServerError, _responseObject);
+            }
+            
 
         }
 
@@ -75,19 +101,31 @@ namespace Portfolio_API.Controllers
         [HttpPut("{experienceid}")]
         public ActionResult UpdateUserExperience(int experienceId, [FromBody] UserExperienceDto userExperience)
             {
-            var userId = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
-            if (userId == null )
+            try
             {
-                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "User or Exprience id not found");
-                return NotFound(_responseObject);
+                var userId = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
+                if (userId == null)
+                {
+                    _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "User or Exprience id not found");
+                    return NotFound(_responseObject);
+                }
+
+                var updateExperience = _mapper.Map<UserExperience>(userExperience);
+
+                _userExperienceRepository.UpdateUserExperience(userId, experienceId, updateExperience);
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Experience Updated succesfully");
+
+                return Ok(_responseObject);
+
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while updating user experience.");
 
-            var updateExperience = _mapper.Map<UserExperience>(userExperience);
-
-            _userExperienceRepository.UpdateUserExperience(userId, experienceId, updateExperience);
-            _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Experience Updated succesfully");
-
-            return Ok(_responseObject);
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "An error occurred while updating user experience.");
+                return StatusCode(StatusCodes.Status500InternalServerError, _responseObject);
+            }
+        
 
         }
 
@@ -95,18 +133,29 @@ namespace Portfolio_API.Controllers
         [HttpDelete("{experienceId}")]
         public IActionResult DeleteUserExperience(int experienceId)
         {
-            var userId = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
-
-            if (userId == null )
+            try
             {
-                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "User not found");
-                return NotFound(_responseObject);
+                var userId = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
+
+                if (userId == null)
+                {
+                    _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "User not found");
+                    return NotFound(_responseObject);
+                }
+
+                _userExperienceRepository.RemoveUserExperience(userId, experienceId);
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Experience Deleted successfully");
+
+                return Ok(_responseObject);
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while deleting user experience.");
 
-            _userExperienceRepository.RemoveUserExperience(userId, experienceId);
-            _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Experience Deleted successfully");
-
-            return Ok(_responseObject);
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "An error occurred while deleting user experience.");
+                return StatusCode(StatusCodes.Status500InternalServerError, _responseObject);
+            }
+           
 
         }
     }
