@@ -87,7 +87,8 @@ namespace Portfolio_API.Repository
         public IEnumerable<IdentityManual> getUsers()
         {
             var users = _context.identityManuals
-            .Include(about => about.UserProfile).ToList();
+            .Include(about => about.UserProfile)
+            .ToList();
             return users;
         }
 

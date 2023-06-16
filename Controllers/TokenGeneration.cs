@@ -36,6 +36,7 @@ namespace Portfolio_API.Controllers
             TokenClaims.Add(new Claim("UserId", user.Id.ToString()));
             TokenClaims.Add(new Claim("UserName", user.UserName.ToString()));
             TokenClaims.Add(new Claim("Email", user.Email.ToString()));
+            TokenClaims.Add(new Claim("Role", user.Role.ToString()));
 
             var jwtSecurityToken = new JwtSecurityToken(
                 _configuration["Authentication:Issuer"],

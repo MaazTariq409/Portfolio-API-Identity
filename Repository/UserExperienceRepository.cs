@@ -20,7 +20,7 @@ namespace Portfolio_API.Repository
 		public IEnumerable<UserExperience> GetUserExperience(string userid)
 		{
             var user = _context.identityManuals.Include(x => x.UserProfile.UserExperiences).FirstOrDefault(x => x.Id == userid);
-
+            Thread.Sleep(5000);
             return user.UserProfile.UserExperiences;
 		}
 

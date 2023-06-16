@@ -8,5 +8,6 @@
 		}
 		public ResponseInfo Result { get; set; }
 		public object Data { get; set; }
+		public string Role { get; set; }
 	}
 }

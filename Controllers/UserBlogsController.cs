@@ -201,5 +201,21 @@ namespace Portfolio_API.Controllers
             return Ok(_responseObject);
 
         }
+
+        [AllowAnonymous]
+        [HttpGet("/api/categories")]
+        public ActionResult<List<string>> GetAllCategories()
+        {
+            var categories = _userBlogsRepository.GetAllCategories();
+            if(categories == null)
+            {
+                _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Failure.ToString(), "No Category Found");
+            }
+
+            _responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Categories Found successfully", categories);
+
+            return Ok(_responseObject);
+
+        }
     }
 }

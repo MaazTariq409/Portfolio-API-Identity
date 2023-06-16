@@ -2,7 +2,7 @@
 {
 	public class ResponseBuilder
 	{
-		public static ResponseObject GenerateResponse(string code, string message, object data = null)
+		public static ResponseObject GenerateResponse(string code, string message, object data = null, string role = null)
 		{
 			ResponseObject responseObject = new ResponseObject();
 
@@ -11,6 +11,7 @@
 			responseObject.Data = data;
 			responseObject.Result.Code = code;
             responseObject.Result.Message = message;
+			responseObject.Role = role;
 
 
 

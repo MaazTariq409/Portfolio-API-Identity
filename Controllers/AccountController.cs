@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using log4net;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Portfolio_API.DTOs;
@@ -12,9 +13,12 @@ namespace Portfolio_API.Controllers
 	[ApiController]
 	public class AccountController : ControllerBase
 	{
+        private static readonly ILog log = LogManager.GetLogger(typeof(AccountController));
 
-		private readonly IMapper _mapper;
 
+        private readonly IMapper _mapper;
+		private readonly ILogger<AccountController> _logger;
+		//private readonly ILog _netLogger;
 		private readonly UserManager<IdentityManual> _userManager;
 		private readonly SignInManager<IdentityManual> _signInManager;
 		private readonly IConfiguration _configuration;
@@ -27,19 +31,22 @@ namespace Portfolio_API.Controllers
 		public AccountController(
 			UserManager<IdentityManual> userManager,
 			SignInManager<IdentityManual> signInManager,
-			//RoleManager<IdentityRoles> roleManager,
 			IConfiguration configuration,
 			IMapper mapper,
-			TokenGeneration token
+			TokenGeneration token,
+			ILogger<AccountController> logger
+            //ILog netLogger
 			)
 		{
 			_userManager = userManager;
 			_signInManager = signInManager;
-			//_roleManager = roleManager;
 			_mapper = mapper;
 			_token = token;
+			_logger = logger;
+            //_netLogger = netLogger;
 
-		}
+
+        }
 		[HttpPost("register")]
 		public async Task<IActionResult> Register(IdentityUserDto model)
 		{
@@ -57,6 +64,7 @@ namespace Portfolio_API.Controllers
 				{
 					UserName = model.UserName,
 					Email = model.Email,
+					Role = model.Role,
 					PasswordHash = model.Password
 				};
 
@@ -67,24 +75,43 @@ namespace Portfolio_API.Controllers
 
 			var tokenToReturn = new Tokenmodel();
 			tokenToReturn.Token = Token;
-			_responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Successfull", tokenToReturn);
+			_responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Successfull", tokenToReturn, model.Role );
 			return Ok(_responseObject);
 		}
 
 		[HttpPost("login")]
 		public async Task<IActionResult> Login(LoginDto model)
 		{
-			var user = await _userManager.FindByEmailAsync(model.Email);
+            //_netLogger.Info("This is an information Net4Log message.");
+            //_netLogger.Error("This is an error Net4Log message.");
+
+            log.Debug("This is a debug message.");
+            log.Info("This is an info message.");
+            log.Warn("This is a warning message.");
+            log.Error("This is an error message.");
+            log.Fatal("This is a fatal message.");
+
+            var user = await _userManager.FindByEmailAsync(model.Email);
 
 			if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
 			{
-				var userRoles = await _userManager.GetRolesAsync(user);
+
+				_logger.LogError("User Login Started");
+
+                
+
+
+                //_roleManager.CreateAsync(new IdentityRole(Role_User));
+                var userRoles = await _userManager.GetRolesAsync(user);
 				var Token = _token.TokenGenerator(user);
 
 				var tokenToReturn = new Tokenmodel();
 				tokenToReturn.Token = Token;
-				_responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Successfull", tokenToReturn);
-				return Ok(_responseObject);
+				_responseObject = ResponseBuilder.GenerateResponse(ResultCode.Success.ToString(), "Request Successfull", tokenToReturn, user.Role);
+
+                _logger.LogInformation("User LogedIn");
+
+                return Ok(_responseObject);
 			}
 			else
 			{

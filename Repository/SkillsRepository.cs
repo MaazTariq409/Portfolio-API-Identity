@@ -20,7 +20,7 @@ namespace Portfolio_API.Repository
 		public IEnumerable<Skills> GetSkillsByUserID(string id)
 		{
             var user = _context.identityManuals.Include(x => x.UserProfile.Skills).FirstOrDefault(x => x.Id == id);
-
+            Thread.Sleep(4000);
             return user.UserProfile.Skills;
 		}
 		public void AddSkillsByUserID(string id, IEnumerable<Skills> skills)

@@ -18,6 +18,7 @@ namespace Portfolio_API.Repository
         public IEnumerable<Education> GetDetails(string id)
         {
             var usersEducation = _context.identityManuals.Include(a => a.UserProfile.Education).FirstOrDefault(b => b.Id == id);
+            Thread.Sleep(3000);
             return usersEducation.UserProfile.Education;
         }
 

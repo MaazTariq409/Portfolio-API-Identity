@@ -8,6 +8,8 @@ namespace Portfolio_API.DTOs
 		public string UserName { get; set; }
 		[Required(ErrorMessage = "Please enter an Email")]
 		public string Email { get; set; }
+		[Required]
+		public string Role { get; set; }
 
 		[StringLength(255, ErrorMessage = "Must be between 5 and 255 characters", MinimumLength = 5)]
 		public string Password { get; set; }

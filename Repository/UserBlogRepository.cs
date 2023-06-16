@@ -164,5 +164,11 @@ namespace Portfolio_API.Repository
 
             }
         }
+
+        public IEnumerable<string> GetAllCategories()
+        {
+            var allTags = _context.userBlogs.Select(x => x.tags).Distinct().ToList();
+            return allTags;
+        }
     }
 }
