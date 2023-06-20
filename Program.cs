@@ -140,6 +140,8 @@ namespace Portfolio_API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
             app.UseCors(builder => builder
             .AllowAnyOrigin()
